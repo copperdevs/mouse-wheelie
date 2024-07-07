@@ -1,10 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
-	id 'com.matthewprenger.cursegradle' version '1.4.0'
-	id 'com.modrinth.minotaur' version '2.1.1'
 	id 'org.cadixdev.licenser' version '0.6.1'
-	id 'com.github.breadmoirai.github-release' version '2.2.12'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -127,86 +124,4 @@ publishing {
 			java.withSourcesJar()
         }
     }
-
-    // select the repositories you want to publish to
-    repositories {
-        if (project.hasProperty("siphalorMavenUser")) {
-            maven {
-                name = "Siphalor"
-                url = "https://maven.siphalor.de/upload.php"
-                credentials {
-                    username = siphalorMavenUser
-                    password = siphalorMavenPassword
-                }
-            }
-        }
-    }
-}
-
-// Mod sites
-
-
-static def getChangelog() {
-	return 'git log -1 --format=format:##%x20%s%n%n%b%nRelease%x20by%x20%an --grep Version'.execute().text.trim()
-}
-
-tasks.register('uploadToModSites') {
-	dependsOn build
-	group = "upload"
-}
-
-if (project.hasProperty("curseforgeToken")) {
-	curseforge {
-		apiKey project.curseforgeToken
-		project {
-			id = "317514"
-			releaseType = project.mod_release
-			changelogType = "markdown"
-			changelog = project.getChangelog()
-			addGameVersion("Fabric")
-			String mcVersions = project.hasProperty("curseforge_mc_versions") ? project.property("curseforge_mc_versions") : project.mod_mc_versions
-			for (version in (mcVersions).split(";")) {
-				addGameVersion(version)
-			}
-			relations {
-				embeddedLibrary "fabric-api"
-				embeddedLibrary "amecs"
-				embeddedLibrary "tweed-api"
-				optionalDependency "modmenu"
-			}
-			mainArtifact(remapJar) {
-				displayName = "[${project.mod_mc_version_specifier}] ${project.mod_version}"
-			}
-		}
-	}
-	uploadToModSites.finalizedBy(tasks.curseforge)
-}
-
-modrinth {
-	if (project.hasProperty("modrinthToken")) {
-		token = project.modrinthToken
-		uploadToModSites.finalizedBy(tasks.modrinth)
-	}
-
-	projectId = "u5Ic2U1u"
-	versionName = "[$project.mod_mc_version_specifier] $project.mod_version"
-	versionType = project.mod_release
-	changelog = project.getChangelog()
-	uploadFile = remapJar
-	gameVersions.set(project.mod_mc_versions.split(";") as List<String>)
-	loaders.set(["fabric"])
-}
-tasks.modrinth.group = "upload"
-
-if (project.hasProperty("githubToken")) {
-	githubRelease {
-		token project.githubToken
-		targetCommitish = "unstable"
-		releaseName = "Version $project.mod_version for $project.mod_mc_version_specifier"
-		body = project.getChangelog()
-		releaseAssets remapJar.getArchiveFile()
-		prerelease = mod_release != "release"
-		overwrite = true
-	}
-	uploadToModSites.finalizedBy(tasks.githubRelease)
 }
