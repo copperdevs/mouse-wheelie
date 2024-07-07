@@ -18,10 +18,18 @@
 package de.siphalor.mousewheelie.client.util;
 
 import com.google.common.collect.Sets;
+import de.siphalor.mousewheelie.MWConfig;
 import de.siphalor.mousewheelie.MouseWheelie;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.client.render.VertexFormatElement;
+import net.minecraft.component.Component;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -30,10 +38,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class ItemStackUtils {
-    private static final NbtCompound EMPTY_COMPOUND = new NbtCompound();
+    private static final ComponentMap EMPTY_COMPONENT_MAP = new ComponentMapImpl(ComponentMap.EMPTY);
 
     public static boolean canCombine(ItemStack a, ItemStack b) {
-        return ItemStack.canCombine(a, b);
+        return ItemStack.areItemsAndComponentsEqual(a, b);
     }
 
     public static int compareEqualItems(ItemStack a, ItemStack b) {
@@ -47,13 +55,17 @@ public class ItemStackUtils {
 
     private static int compareEqualItems2(ItemStack a, ItemStack b) {
         // compare names
-        if (a.hasCustomName()) {
-            if (!b.hasCustomName()) {
+        if (!a.contains(DataComponentTypes.CUSTOM_NAME)) // True means a has custom name
+        {
+            if (b.contains(DataComponentTypes.CUSTOM_NAME)) // True means b does not have custom name
+            {
                 return -1;
             }
             return compareEqualItems3(a, b);
         }
-        if (b.hasCustomName()) {
+        // a does not have custom name
+        if (!b.contains(DataComponentTypes.CUSTOM_NAME)) // true means b has custom name
+        {
             return 1;
         }
         return compareEqualItems3(a, b);
@@ -61,8 +73,8 @@ public class ItemStackUtils {
 
     private static int compareEqualItems3(ItemStack a, ItemStack b) {
         // compare tooltips
-        Iterator<Text> tooltipsA = a.getTooltip(null, TooltipContext.Default.BASIC).iterator();
-        Iterator<Text> tooltipsB = b.getTooltip(null, TooltipContext.Default.BASIC).iterator();
+        Iterator<Text> tooltipsA = a.getTooltip(Item.TooltipContext.DEFAULT, null, TooltipType.BASIC).iterator();
+        Iterator<Text> tooltipsB = b.getTooltip(Item.TooltipContext.DEFAULT, null, TooltipType.BASIC).iterator();
 
         while (tooltipsA.hasNext()) {
             if (!tooltipsB.hasNext()) {
@@ -82,10 +94,9 @@ public class ItemStackUtils {
 
     private static int compareEqualItems4(ItemStack a, ItemStack b) {
         // compare special item properties
-        Item item = a.getItem();
-        if (item instanceof DyeableItem) {
-            int colorA = ((DyeableItem) item).getColor(a);
-            int colorB = ((DyeableItem) item).getColor(b);
+        if (a.isIn(ItemTags.DYEABLE)) {
+            int colorA = DyedColorComponent.getColor(a, -6265536);
+            int colorB = DyedColorComponent.getColor(b, -6265536);
             float[] hsbA = Color.RGBtoHSB(colorA >> 16 & 0xFF, colorA >> 8 & 0xFF, colorA & 0xFF, null);
             float[] hsbB = Color.RGBtoHSB(colorB >> 16 & 0xFF, colorB >> 8 & 0xFF, colorB & 0xFF, null);
             int cmp = Float.compare(hsbA[0], hsbB[0]);
@@ -109,45 +120,38 @@ public class ItemStackUtils {
         return Integer.compare(a.getDamage(), b.getDamage());
     }
 
-    public static NbtCompound getTagOrEmpty(ItemStack stack) {
-        if (stack.hasNbt()) {
-            return stack.getNbt();
-        }
-        return EMPTY_COMPOUND;
+    public static ComponentMap getComponentOrEmpty(ItemStack stack) {
+        return stack.getComponentChanges().isEmpty() ? EMPTY_COMPONENT_MAP: stack.getComponents();
     }
 
-    public static boolean areTagsEqualExcept(ItemStack a, ItemStack b, String... keys) {
-        NbtCompound tagA = getTagOrEmpty(a);
-        NbtCompound tagB = getTagOrEmpty(b);
-        Set<String> checkedKeys = Sets.newHashSet(keys);
-        if (!areTagsEqualExceptOneSided(tagA, tagB, checkedKeys)) {
+    public static boolean areComponentsEqualExcept(ItemStack a, ItemStack b, String... componentNames) {
+        ComponentMap tagA = getComponentOrEmpty(a);
+        ComponentMap tagB = getComponentOrEmpty(b);
+        Set<String> checkedComponents = Sets.newHashSet(componentNames);
+        if (!areTagsEqualExceptOneSided(tagA, tagB, checkedComponents)) {
             return false;
         }
-        return areTagsEqualExceptOneSided(tagB, tagA, checkedKeys);
+        return areTagsEqualExceptOneSided(tagB, tagA, checkedComponents);
     }
 
-    private static boolean areTagsEqualExceptOneSided(NbtCompound tagA, NbtCompound tagB, Set<String> checkedKeys) {
-        for (String key : tagA.getKeys()) {
-            if (checkedKeys.contains(key)) {
+    private static boolean areTagsEqualExceptOneSided(ComponentMap compA, ComponentMap compB, Set<String> checkedComponentTypes) {
+        for (Component comp : compA) {
+            if (checkedComponentTypes.contains(comp.comp_2443().toString())) {
                 continue;
             }
-            if (!tagB.contains(key)) {
+            if (!compB.contains(comp.comp_2443())) {
                 return false;
             }
-            //noinspection ConstantConditions
-            if (!tagA.get(key).equals(tagB.get(key))) {
-                return false;
-            }
-            checkedKeys.add(key);
+            checkedComponentTypes.add(comp.comp_2443().toString());
         }
         return true;
     }
 
     public static boolean areItemsOfSameKind(ItemStack stack1, ItemStack stack2) {
-        return areItemsOfSameKind(stack1, stack2, MouseWheelie.CONFIG.general.itemKindsNbtMatchMode());
+        return areItemsOfSameKind(stack1, stack2, MouseWheelie.CONFIG.general.itemComponentMatchMode());
     }
 
-    public static boolean areItemsOfSameKind(ItemStack stack1, ItemStack stack2, NbtMatchMode mode) {
+    public static boolean areItemsOfSameKind(ItemStack stack1, ItemStack stack2, ComponentTypeMatchMode mode) {
         switch (mode) {
             case NONE -> {
                 return stack1.getItem() == stack2.getItem();
@@ -159,13 +163,13 @@ public class ItemStackUtils {
                 if (!ItemStack.areItemsEqual(stack1, stack2)) {
                     return false;
                 }
-                return areTagsEqualExcept(stack1, stack2, "Damage", "Enchantments");
+                return areComponentsEqualExcept(stack1, stack2, DataComponentTypes.DAMAGE.toString(),DataComponentTypes.ENCHANTMENTS.toString());
             }
         }
         return false; // unreachable
     }
 
-    public static int hashByKind(ItemStack stack, NbtMatchMode mode) {
+    public static int hashByKind(ItemStack stack, ComponentTypeMatchMode mode) {
         switch (mode) {
             case NONE:
                 return stack.getItem().hashCode();
@@ -174,23 +178,24 @@ public class ItemStackUtils {
             case SOME:
                 HashCodeBuilder hashCodeBuilder = new HashCodeBuilder()
                         .append(stack.getItem());
-                NbtCompound nbt = stack.getNbt();
-                if (nbt == null) {
+
+                ComponentMap componentMap = stack.getComponents();
+                if (componentMap == null) {
                     return hashCodeBuilder.toHashCode();
                 }
 
-                nbt.getKeys().stream().sorted().forEachOrdered(key -> {
-                    if (key.equals("Damage") || key.equals("Enchantments")) {
-                        return;
+                for (Component component : componentMap)
+                {
+                    if (!(component.comp_2443().equals(DataComponentTypes.DAMAGE) || component.comp_2443().equals(DataComponentTypes.ENCHANTMENTS)))
+                    {
+                        hashCodeBuilder.append(component.comp_2443().toString()).append(component.comp_2444().toString());
                     }
-                    hashCodeBuilder.append(key).append(nbt.get(key));
-                });
-                return hashCodeBuilder.toHashCode();
+                }
         }
         return 0; // unreachable
     }
 
-    public enum NbtMatchMode {
+    public enum ComponentTypeMatchMode {
         NONE, SOME, ALL
     }
 }

@@ -33,7 +33,7 @@ public class MWConfigModel {
         // NONE disables this.
         // ALL checks for exactly the same nbt.
         // SOME allows for differences in damage and enchantments.
-        public ItemStackUtils.NbtMatchMode itemKindsNbtMatchMode = ItemStackUtils.NbtMatchMode.SOME;
+        public ItemStackUtils.ComponentTypeMatchMode itemComponentMatchMode = ItemStackUtils.ComponentTypeMatchMode.SOME;
 
         public enum HotbarScoping {HARD, SOFT, NONE}
 
@@ -43,20 +43,6 @@ public class MWConfigModel {
 
         // Enables dragging bundles while holding right-click to pick up or put out multiple stacks in a single swipe.
         public boolean enableBundleDragging = true;
-
-//        @AConfigListener("interaction-rate")
-        public void onReloadInteractionRate() {
-            if (!MWClient.isOnLocalServer()) {
-                InteractionManager.setTickRate(interactionRate);
-            }
-        }
-//
-//        @AConfigListener("integrated-interaction-rate")
-        public void onReloadIntegratedInteractionRate() {
-            if (MWClient.isOnLocalServer()) {
-                InteractionManager.setTickRate(integratedInteractionRate);
-            }
-        }
     }
 
     @Nest
@@ -78,14 +64,8 @@ public class MWConfigModel {
         public SortMode controlSort = SortMode.ALPHABET;
         public boolean serverAcceleratedSorting = true;
 
-        //        @AConfigEntry(scope = ConfigScope.SMALLEST)
         @Hook
         public boolean optimizeCreativeSearchSort = true;
-
-        //        @AConfigListener("optimize-creative-search-sort")
-        public void onReloadOptimizeCreativeSearchSort() {
-            CreativeSearchOrder.refreshItemSearchPositionLookup();
-        }
     }
 
     @Nest

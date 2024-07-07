@@ -78,7 +78,7 @@ public class CreativeSearchOrder {
 					int i = 0;
 					for (ItemStack stack : displayStacks) {
 						StackMatcher plainMatcher = StackMatcher.ignoreNbt(stack);
-						if (!stack.hasNbt() || !stackToSearchPositionLookup.containsKey(plainMatcher)) {
+						if (!stack.getComponentChanges().isEmpty() || !stackToSearchPositionLookup.containsKey(plainMatcher)) {
 							stackToSearchPositionLookup.put(plainMatcher, i);
 							i++;
 						}

@@ -18,6 +18,7 @@
 package de.siphalor.mousewheelie.client.util;
 
 import com.google.common.base.Objects;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -26,11 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class StackMatcher {
 	private final @NotNull Item item;
-	private final @Nullable NbtCompound nbt;
+	private final @Nullable ComponentMap componentMap;
 
-	private StackMatcher(@NotNull Item item, @Nullable NbtCompound nbt) {
+	private StackMatcher(@NotNull Item item, @Nullable ComponentMap componentMap) {
 		this.item = item;
-		this.nbt = nbt;
+		this.componentMap = componentMap;
 	}
 
 	public static StackMatcher ignoreNbt(@NotNull ItemStack stack) {
@@ -38,16 +39,16 @@ public class StackMatcher {
 	}
 
 	public static StackMatcher of(@NotNull ItemStack stack) {
-		return new StackMatcher(stack.getItem(), stack.getNbt());
+		return new StackMatcher(stack.getItem(), stack.getComponents());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof StackMatcher other) {
-			return item == other.item && Objects.equal(nbt, other.nbt);
+			return item == other.item && Objects.equal(componentMap, other.componentMap);
 		}
 		if (obj instanceof ItemStack stack) {
-			return item == stack.getItem() && Objects.equal(nbt, stack.getNbt());
+			return item == stack.getItem() && Objects.equal(componentMap, stack.getComponents());
 		}
 		if (obj instanceof Item objItem) {
 			return item == objItem;
@@ -57,6 +58,6 @@ public class StackMatcher {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(item, nbt);
+		return Objects.hashCode(item, componentMap);
 	}
 }

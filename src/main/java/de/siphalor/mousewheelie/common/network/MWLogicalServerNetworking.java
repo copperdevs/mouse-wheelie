@@ -18,19 +18,18 @@
 package de.siphalor.mousewheelie.common.network;
 
 import de.siphalor.mousewheelie.MouseWheelie;
+import de.siphalor.mousewheelie.network.ReorderInventoryPayload;
 import it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.CustomLog;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
@@ -40,18 +39,19 @@ import java.util.stream.Collectors;
  * Class that handles functionality on the logical server side.
  */
 @CustomLog
-public class MWLogicalServerNetworking extends MWNetworking {
+public class MWLogicalServerNetworking {
 
 	private MWLogicalServerNetworking() {}
 
 	public static void setup() {
-		ServerPlayNetworking.registerGlobalReceiver(REORDER_INVENTORY_C2S_PACKET, MWLogicalServerNetworking::onReorderInventoryPacket);
+		PayloadTypeRegistry.playC2S().register(ReorderInventoryPayload.ID, ReorderInventoryPayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(ReorderInventoryPayload.ID, (payload, context) -> {
+			onReorderInventoryPacket(context.player().getServer(), context.player(), payload);
+		});
 	}
 
-	private static void onReorderInventoryPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-		ReorderInventoryPacket packet = ReorderInventoryPacket.read(buf);
-
-		if (packet == null) {
+	private static void onReorderInventoryPacket(MinecraftServer server, ServerPlayerEntity player, ReorderInventoryPayload payload) {
+		if (payload == null) {
 			log.warn("Failed to read reorder inventory packet from player {}!", player);
 			return;
 		}
@@ -61,10 +61,10 @@ public class MWLogicalServerNetworking extends MWNetworking {
 			return;
 		}
 
-		if (packet.getSyncId() == player.playerScreenHandler.syncId) {
-			server.execute(() -> reorder(player, player.playerScreenHandler, packet.getSlotMappings()));
-		} else if (packet.getSyncId() == player.currentScreenHandler.syncId) {
-			server.execute(() -> reorder(player, player.currentScreenHandler, packet.getSlotMappings()));
+		if (payload.syncId() == player.playerScreenHandler.syncId) {
+			server.execute(() -> reorder(player, player.playerScreenHandler, payload.slotMappings()));
+		} else if (payload.syncId() == player.currentScreenHandler.syncId) {
+			server.execute(() -> reorder(player, player.currentScreenHandler, payload.slotMappings()));
 		}
 	}
 

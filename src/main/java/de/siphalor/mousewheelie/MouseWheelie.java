@@ -17,6 +17,9 @@
 
 package de.siphalor.mousewheelie;
 
+import de.siphalor.mousewheelie.client.MWClient;
+import de.siphalor.mousewheelie.client.network.InteractionManager;
+import de.siphalor.mousewheelie.client.util.CreativeSearchOrder;
 import de.siphalor.mousewheelie.common.network.MWLogicalServerNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -30,32 +33,53 @@ import net.minecraft.world.World;
 import de.siphalor.mousewheelie.MWConfig;
 
 public class MouseWheelie implements ModInitializer {
-	public static final String MOD_ID = "mousewheelie";
-	public static final String MOD_NAME = "Mouse Wheelie";
+    public static final String MOD_ID = "mousewheelie";
+    public static final String MOD_NAME = "Mouse Wheelie";
 
-	public static MWConfig CONFIG;
+    public static MWConfig CONFIG = MWConfig.createAndLoad();
 
-	@Override
-	public void onInitialize() {
-		UseItemCallback.EVENT.register(this::onPlayerUseItem);
+    @Override
+    public void onInitialize() {
+        UseItemCallback.EVENT.register(this::onPlayerUseItem);
 
-		MWLogicalServerNetworking.setup();
-	}
+        MWLogicalServerNetworking.setup();
 
-	private TypedActionResult<ItemStack> onPlayerUseItem(PlayerEntity player, World world, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
-		if (CONFIG.general.enableQuickArmorSwapping() && !world.isClient()) {
-			EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
-			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				ItemStack equipmentStack = player.getEquippedStack(equipmentSlot);
-				int index = 5 + (3 - equipmentSlot.getEntitySlotId());
-				if (!equipmentStack.isEmpty() && player.playerScreenHandler.getSlot(index).canTakeItems(player)) {
-					player.setStackInHand(hand, equipmentStack);
-					player.equipStack(equipmentSlot, stack);
-					return TypedActionResult.consume(equipmentStack);
-				}
-			}
-		}
-		return TypedActionResult.pass(stack);
-	}
+        CONFIG.general.subscribeToInteractionRate(this::onReloadInteractionRate);
+        CONFIG.general.subscribeToIntegratedInteractionRate(this::onReloadIntegratedInteractionRate);
+        CONFIG.sort.subscribeToOptimizeCreativeSearchSort(this::onReloadOptimizeCreativeSearchSort);
+
+    }
+
+    private void onReloadInteractionRate(int value) {
+        if (!MWClient.isOnLocalServer()) {
+            InteractionManager.setTickRate(CONFIG.general.interactionRate());
+        }
+    }
+
+    private void onReloadIntegratedInteractionRate(int value) {
+        if (!MWClient.isOnLocalServer()) {
+            InteractionManager.setTickRate(CONFIG.general.integratedInteractionRate());
+        }
+    }
+
+    private void onReloadOptimizeCreativeSearchSort(boolean value) {
+        CreativeSearchOrder.refreshItemSearchPositionLookup();
+    }
+
+    private TypedActionResult<ItemStack> onPlayerUseItem(PlayerEntity player, World world, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
+        if (CONFIG.general.enableQuickArmorSwapping() && !world.isClient()) {
+            EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
+            if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
+                ItemStack equipmentStack = player.getEquippedStack(equipmentSlot);
+                int index = 5 + (3 - equipmentSlot.getEntitySlotId());
+                if (!equipmentStack.isEmpty() && player.playerScreenHandler.getSlot(index).canTakeItems(player)) {
+                    player.setStackInHand(hand, equipmentStack);
+                    player.equipStack(equipmentSlot, stack);
+                    return TypedActionResult.consume(equipmentStack);
+                }
+            }
+        }
+        return TypedActionResult.pass(stack);
+    }
 }

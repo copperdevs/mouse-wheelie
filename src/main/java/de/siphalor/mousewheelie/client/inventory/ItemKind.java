@@ -38,11 +38,11 @@ public class ItemKind {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ItemKind that = (ItemKind) o;
-		return ItemStackUtils.areItemsOfSameKind(stack, that.stack, MouseWheelie.CONFIG.general.itemKindsNbtMatchMode());
+		return ItemStackUtils.areItemsOfSameKind(stack, that.stack, MouseWheelie.CONFIG.general.itemComponentMatchMode());
 	}
 
 	@Override
 	public int hashCode() {
-		return ItemStackUtils.hashByKind(stack, MouseWheelie.CONFIG.general.itemKindsNbtMatchMode());
+		return ItemStackUtils.hashByKind(stack, MouseWheelie.CONFIG.general.itemComponentMatchMode());
 	}
 }

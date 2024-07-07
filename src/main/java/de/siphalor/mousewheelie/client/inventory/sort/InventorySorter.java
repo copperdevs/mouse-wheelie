@@ -22,8 +22,10 @@ import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.network.MWClientNetworking;
+import de.siphalor.mousewheelie.client.util.ItemStackUtils;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
 import de.siphalor.mousewheelie.common.network.ReorderInventoryPacket;
+import de.siphalor.mousewheelie.network.ReorderInventoryPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -101,7 +103,7 @@ public class InventorySorter {
 				ItemStack targetStack = stacks[j];
 				if (targetStack.isEmpty()) continue;
 				if (targetStack.getCount() >= targetStack.getItem().getMaxCount()) continue;
-				if (ItemStack.canCombine(stack, targetStack)) {
+				if (ItemStackUtils.canCombine(stack, targetStack)) {
 					int delta = targetStack.getItem().getMaxCount() - targetStack.getCount();
 					delta = Math.min(delta, stackSize);
 					stackSize -= delta;
@@ -155,7 +157,7 @@ public class InventorySorter {
 			slotMappings[i * 2 + 1] = ((ISlot) to).mouseWheelie_getIdInContainer();
 		}
 		InteractionManager.push(() -> {
-			MWClientNetworking.send(new ReorderInventoryPacket(containerScreen.getScreenHandler().syncId, slotMappings));
+			MWClientNetworking.send(new ReorderInventoryPayload(containerScreen.getScreenHandler().syncId, slotMappings));
 			return InteractionManager.TICK_WAITER;
 		});
 	}
@@ -203,7 +205,7 @@ public class InventorySorter {
 						stacks[id].getItem() == currentStack.getItem()
 								//&& stacks[id].getCount() == currentStack.getCount()
 								&& !doneSlashEmpty.get(slotCount + id)
-								&& ItemStack.canCombine(stacks[id], currentStack)
+								&& ItemStackUtils.canCombine(stacks[id], currentStack)
 				) {
 					// If the current stack and the target stack are completely equal, then we can skip this step in the chain
 					if (stacks[id].getCount() == currentStack.getCount()) {
