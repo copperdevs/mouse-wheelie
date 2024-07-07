@@ -18,6 +18,7 @@
 package de.siphalor.mousewheelie.client.util;
 
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MouseWheelie;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.MinecraftClient;
@@ -55,7 +56,7 @@ public class CreativeSearchOrder {
 
 	// Called on config change and when the feature set changes (on world join)
 	public static void refreshItemSearchPositionLookup() {
-		if (MWConfig.sort.optimizeCreativeSearchSort) {
+		if (MouseWheelie.CONFIG.sort.optimizeCreativeSearchSort()) {
 			MinecraftClient client = MinecraftClient.getInstance();
 			if (client.world == null) {
 				return;

@@ -18,6 +18,7 @@
 package de.siphalor.mousewheelie.client.inventory.sort;
 
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.network.MWClientNetworking;
@@ -138,7 +139,7 @@ public class InventorySorter {
 
 		sortIds = sortMode.sort(sortIds, stacks, new SortContext(containerScreen, Arrays.asList(inventorySlots)));
 
-		if (MWConfig.sort.serverAcceleratedSorting && MWClientNetworking.canSendReorderPacket()) {
+		if (MouseWheelie.CONFIG.sort.serverAcceleratedSorting() && MWClientNetworking.canSendReorderPacket()) {
 			this.reorderInventory(sortIds);
 		} else {
 			this.sortOnClient(sortIds);

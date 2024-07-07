@@ -20,6 +20,8 @@ package de.siphalor.mousewheelie.client.inventory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MWConfigModel;
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.client.network.ClickEventFactory;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
@@ -136,7 +138,7 @@ public class ContainerScreenHelper<T extends HandledScreen<?>> {
 	public void scroll(Slot referenceSlot, boolean scrollUp) {
 		// Shall send determines whether items from the referenceSlot shall be moved to another scope. Otherwise the referenceSlot will receive items.
 		boolean shallSend;
-		if (MWConfig.scrolling.directionalScrolling) {
+		if (MouseWheelie.CONFIG.scrolling.directionalScrolling()) {
 			shallSend = shallChangeInventory(referenceSlot, scrollUp);
 		} else {
 			shallSend = !scrollUp;
@@ -248,8 +250,8 @@ public class ContainerScreenHelper<T extends HandledScreen<?>> {
 		} else {
 			if (slot.inventory instanceof PlayerInventory) {
 				if (isHotbarSlot(slot)) {
-					if (MWConfig.general.hotbarScoping == MWConfig.General.HotbarScoping.HARD
-							|| MWConfig.general.hotbarScoping == MWConfig.General.HotbarScoping.SOFT && preferSmallerScopes) {
+					if (MouseWheelie.CONFIG.general.hotbarScoping() == MWConfigModel.General.HotbarScoping.HARD
+							|| MouseWheelie.CONFIG.general.hotbarScoping() == MWConfigModel.General.HotbarScoping.SOFT && preferSmallerScopes) {
 						return -1;
 					}
 				}

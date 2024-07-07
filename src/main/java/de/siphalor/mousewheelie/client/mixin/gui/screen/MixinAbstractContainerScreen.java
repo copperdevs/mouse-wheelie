@@ -19,6 +19,7 @@ package de.siphalor.mousewheelie.client.mixin.gui.screen;
 
 import com.google.common.base.Suppliers;
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.BundleDragMode;
 import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
@@ -100,7 +101,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 		Collection<Slot> slots = Collections.emptyList();
 		Slot hoveredSlot = getSlotAt(x, y);
 
-		if (MWConfig.general.betterFastDragging) {
+		if (MouseWheelie.CONFIG.general.betterFastDragging()) {
 			double dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 			if (dist > 16.0) {
 				slots = new ArrayList<>();
@@ -128,7 +129,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 
 		ContainerScreenHelper<?> screenHelper = this.screenHelper.get();
 		if (button == 0) { // Left mouse button
-			if (MWConfig.general.enableDropModifier && MWClient.DROP_MODIFIER.isPressed()) {
+			if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
 				for (Slot slot : slots) {
 					screenHelper.dropStackLocked(slot);
 				}
@@ -187,7 +188,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 			}
 
 			boolean success = true;
-			if (MWConfig.general.enableDropModifier && MWClient.DROP_MODIFIER.isPressed()) {
+			if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
 				if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
 					if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
 						screenHelper.get().dropAllFrom(hoveredSlot);
@@ -219,7 +220,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 			}
 		} else if (button == 1) {
 			ItemStack cursorStack = handler.getCursorStack();
-			if (!cursorStack.isEmpty() && MWConfig.general.enableBundleDragging && cursorStack.getItem() instanceof BundleItem item) {
+			if (!cursorStack.isEmpty() && MouseWheelie.CONFIG.general.enableBundleDragging() && cursorStack.getItem() instanceof BundleItem item) {
 				Slot hoveredSlot = getSlotAt(x, y);
 				if (hoveredSlot == null) {
 					bundleDragMode = BundleDragMode.AUTO;
@@ -258,7 +259,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 
 	@Override
 	public ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount) {
-		if (MWConfig.scrolling.enable) {
+		if (MouseWheelie.CONFIG.scrolling.enable()) {
 			if (hasAltDown()) return ScrollAction.FAILURE;
 			Slot hoveredSlot = getSlotAt(mouseX, mouseY);
 			if (hoveredSlot == null)
@@ -297,11 +298,11 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 		InventorySorter sorter = new InventorySorter(screenHelper.get(), (HandledScreen<?>) (Object) this, focusedSlot);
 		SortMode sortMode;
 		if (hasShiftDown()) {
-			sortMode = MWConfig.sort.shiftSort;
+			sortMode = MouseWheelie.CONFIG.sort.shiftSort();
 		} else if (hasControlDown()) {
-			sortMode = MWConfig.sort.controlSort;
+			sortMode = MouseWheelie.CONFIG.sort.controlSort();
 		} else {
-			sortMode = MWConfig.sort.primarySort;
+			sortMode = MouseWheelie.CONFIG.sort.primarySort();
 		}
 		if (sortMode == null) return false;
 		sorter.sort(sortMode);

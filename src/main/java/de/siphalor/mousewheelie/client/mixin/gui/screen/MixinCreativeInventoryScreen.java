@@ -18,6 +18,7 @@
 package de.siphalor.mousewheelie.client.mixin.gui.screen;
 
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.compat.FabricCreativeGuiHelper;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
@@ -60,7 +61,7 @@ public abstract class MixinCreativeInventoryScreen extends AbstractInventoryScre
 
 	@Override
 	public ScrollAction mouseWheelie_onMouseScrolledSpecial(double mouseX, double mouseY, double scrollAmount) {
-		if (MWConfig.scrolling.scrollCreativeMenuTabs) {
+		if (MouseWheelie.CONFIG.scrolling.scrollCreativeMenuTabs()) {
 			double relMouseY = mouseY - this.y;
 			double relMouseX = mouseX - this.x;
 			boolean yOverTopTabs = (-32 <= relMouseY && relMouseY <= 0);
@@ -89,8 +90,8 @@ public abstract class MixinCreativeInventoryScreen extends AbstractInventoryScre
 			}
 		}
 
-		if (MWConfig.scrolling.enable && !isInventoryTabSelected()) {
-			if (MWConfig.scrolling.scrollCreativeMenuItems == hasAltDown())
+		if (MouseWheelie.CONFIG.scrolling.enable() && !isInventoryTabSelected()) {
+			if (MouseWheelie.CONFIG.scrolling.scrollCreativeMenuItems() == hasAltDown())
 				return ScrollAction.ABORT;
 			Slot hoverSlot = this.mouseWheelie_getSlotAt(mouseX, mouseY);
 			if (hoverSlot != null) {

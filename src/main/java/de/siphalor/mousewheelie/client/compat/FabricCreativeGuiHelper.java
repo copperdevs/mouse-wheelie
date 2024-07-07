@@ -17,35 +17,35 @@
 
 package de.siphalor.mousewheelie.client.compat;
 
-import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
+import net.fabricmc.fabric.api.client.itemgroup.v1.FabricCreativeInventoryScreen;
 import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 
 @SuppressWarnings("UnstableApiUsage")
 public final class FabricCreativeGuiHelper {
-	private final CreativeGuiExtensions fabricExtensions;
+    private final FabricCreativeInventoryScreen fabricExtensions;
 
-	public FabricCreativeGuiHelper(CreativeInventoryScreen screen) {
-		fabricExtensions = (CreativeGuiExtensions) screen;
-	}
+    public FabricCreativeGuiHelper(CreativeInventoryScreen screen) {
+        fabricExtensions = screen;
+    }
 
-	public void nextPage() {
-		fabricExtensions.fabric_nextPage();
-	}
+    public void nextPage() {
+        fabricExtensions.switchToNextPage();
+    }
 
-	public void previousPage() {
-		fabricExtensions.fabric_previousPage();
-	}
+    public void previousPage() {
+        fabricExtensions.switchToPreviousPage();
+    }
 
-	public int getCurrentPage() {
-		return fabricExtensions.fabric_currentPage();
-	}
+    public int getCurrentPage() {
+        return fabricExtensions.getCurrentPage();
+    }
 
-	public int getPageForTabIndex(int index) {
-		return index < 12 ? 0 : (index - 12) / (12 - FabricCreativeGuiHelper.getCommonItemGroupsSize()) + 1;
-	}
+    public int getPageForTabIndex(int index) {
+        return index < 12 ? 0 : (index - 12) / (12 - FabricCreativeGuiHelper.getCommonItemGroupsSize()) + 1;
+    }
 
-	public static int getCommonItemGroupsSize() {
-		return FabricCreativeGuiComponents.COMMON_GROUPS.size();
-	}
+    public static int getCommonItemGroupsSize() {
+        return FabricCreativeGuiComponents.COMMON_GROUPS.size();
+    }
 }

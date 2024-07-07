@@ -35,11 +35,6 @@
 			{
 				"value": "de.siphalor.mousewheelie.MouseWheelie"
 			}
-		],
-		"tweed4:config": [
-			{
-				"value": "de.siphalor.mousewheelie.MWConfig"
-			}
 		]
 	},
 	"suggests": {

@@ -1,113 +1,102 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
-	id 'org.cadixdev.licenser' version '0.6.1'
+    id 'org.cadixdev.licenser' version '0.6.1'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version + "+mc" + project.minecraft_version
 group = project.maven_group
 
 repositories {
-	mavenLocal()
-	maven {
-		name "Fabric"
-		url "https://maven.fabricmc.net/"
-	}
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/releases" }
-	maven {
-		name "Siphalor's Maven"
-		url "https://maven.siphalor.de/"
-	}
-	maven { url "https://jitpack.io" }
+    mavenLocal()
+    maven {
+        name "Fabric"
+        url "https://maven.fabricmc.net/"
+    }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases" }
+    maven {
+        name "Siphalor's Maven"
+        url "https://maven.siphalor.de/"
+    }
+    maven { url "https://jitpack.io" }
+    maven { url 'https://maven.wispforest.io' }
 }
 
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	compileOnly(annotationProcessor("org.projectlombok:lombok:$lombok_version"))
-	testCompileOnly(testAnnotationProcessor("org.projectlombok:lombok:$lombok_version"))
+    compileOnly(annotationProcessor("org.projectlombok:lombok:$lombok_version"))
+    testCompileOnly(testAnnotationProcessor("org.projectlombok:lombok:$lombok_version"))
 
-	def fabric_deps = [
-	        'fabric-api-base',
-            'fabric-events-interaction-v0',
-			'fabric-item-api-v1',
-			'fabric-lifecycle-events-v1',
-			'fabric-key-binding-api-v1',
-            'fabric-networking-api-v1',
-			'fabric-resource-loader-v0',
-			'fabric-registry-sync-v0',
-			'fabric-screen-api-v1'
-	]
-	fabric_deps.forEach { include(modImplementation(fabricApi.module(it, fabric_api_version)))}
-	modImplementation(fabricApi.module("fabric-item-group-api-v1", fabric_api_version))
 
-	modApi("com.terraformersmc:modmenu:9.0.0-pre.1")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
-	include(modApi(platform("de.siphalor.tweed4:tweed4-bom-$minecraft_major_version:$tweed_version")))
-	def tweed_deps = [
-	        "base", "annotated",
-			"data", "data-hjson",
-			"tailor-screen", "tailor-coat",
-			"tailor-lang-json-descriptions"
-	]
-	tweed_deps.forEach { include(modApi("de.siphalor.tweed4:tweed4-$it-$minecraft_major_version")) { exclude module: 'modmenu'} }
-	include(modApi("de.siphalor:coat-$minecraft_major_version:$coat_version"))
+    modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-	modImplementation(include("de.siphalor:amecsapi-$minecraft_major_version:${project.amecs_version}")) {
-		exclude group: "net.fabricmc.fabric-api"
-	}
+    modImplementation(include("de.siphalor:amecsapi-$minecraft_major_version:${project.amecs_version}")) {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+    annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
+    include "io.wispforest:owo-sentinel:${project.owo_version}"
 }
 
 // Workaround for https://github.com/gradle/gradle/issues/10195
 configurations.include.transitive = true
 configurations.include.dependencies.each {
-	if (!it.name.contains("bom")) {
-		it.transitive = false
-	}
+    if (!it.name.contains("bom")) {
+        it.transitive = false
+    }
 }
 
 //sourceSets.main.java.exclude("**/ModMenu*")
 
 license {
-	header = project.file('LICENSE_HEADER')
+    header = project.file('LICENSE_HEADER')
 
-	include '**/*.java'
+    include '**/*.java'
 }
 
 processResources {
     inputs.property "version", version
 
-	afterEvaluate {
-		from(sourceSets.main.resources.srcDirs) {
-			include "fabric.mod.json"
-			expand "version": version
-			duplicatesStrategy DuplicatesStrategy.INCLUDE
-		}
-	}
+    afterEvaluate {
+        from(sourceSets.main.resources.srcDirs) {
+            include "fabric.mod.json"
+            expand "version": version
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
+        }
+    }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile).configureEach {
-	options.encoding = "UTF-8"
+    options.encoding = "UTF-8"
+    it.options.release = 21
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present.
 // If you remove this task, sources will not be generated.
 tasks.register('sourcesJar', Jar) {
-	dependsOn classes
-	archiveClassifier.set("sources")
-	from sourceSets.main.allSource
+    dependsOn classes
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
@@ -120,8 +109,8 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId = "${project.archives_base_name}-${project.minecraft_major_version}"
 
-			from components.java
-			java.withSourcesJar()
+            from components.java
+            java.withSourcesJar()
         }
     }
 }

@@ -27,10 +27,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import de.siphalor.mousewheelie.MWConfig;
 
 public class MouseWheelie implements ModInitializer {
 	public static final String MOD_ID = "mousewheelie";
 	public static final String MOD_NAME = "Mouse Wheelie";
+
+	public static MWConfig CONFIG;
 
 	@Override
 	public void onInitialize() {
@@ -41,7 +44,7 @@ public class MouseWheelie implements ModInitializer {
 
 	private TypedActionResult<ItemStack> onPlayerUseItem(PlayerEntity player, World world, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (MWConfig.general.enableQuickArmorSwapping && !world.isClient()) {
+		if (CONFIG.general.enableQuickArmorSwapping() && !world.isClient()) {
 			EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
 				ItemStack equipmentStack = player.getEquippedStack(equipmentSlot);

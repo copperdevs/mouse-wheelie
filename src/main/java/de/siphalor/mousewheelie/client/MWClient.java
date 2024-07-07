@@ -50,7 +50,6 @@ public class MWClient implements ClientModInitializer {
 
 	public static final String KEY_BINDING_CATEGORY = "key.categories." + MouseWheelie.MOD_ID;
 
-	public static final KeyBinding OPEN_CONFIG_SCREEN = new OpenConfigScreenKeybinding(new Identifier(MouseWheelie.MOD_ID, "open_config_screen"), InputUtil.Type.KEYSYM, -1, KEY_BINDING_CATEGORY, new KeyModifiers());
 	public static final KeyBinding SORT_KEY_BINDING = new SortKeyBinding(new Identifier(MouseWheelie.MOD_ID, "sort_inventory"), InputUtil.Type.MOUSE, 2, KEY_BINDING_CATEGORY, new KeyModifiers());
 	public static final KeyBinding SCROLL_UP_KEY_BINDING = new ScrollKeyBinding(new Identifier(MouseWheelie.MOD_ID, "scroll_up"), KEY_BINDING_CATEGORY, false);
 	public static final KeyBinding SCROLL_DOWN_KEY_BINDING = new ScrollKeyBinding(new Identifier(MouseWheelie.MOD_ID, "scroll_down"), KEY_BINDING_CATEGORY, true);
@@ -65,7 +64,6 @@ public class MWClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		KeyBindingHelper.registerKeyBinding(OPEN_CONFIG_SCREEN);
 		KeyBindingHelper.registerKeyBinding(SORT_KEY_BINDING);
 		KeyBindingHelper.registerKeyBinding(SCROLL_UP_KEY_BINDING);
 		KeyBindingHelper.registerKeyBinding(SCROLL_DOWN_KEY_BINDING);
@@ -80,7 +78,7 @@ public class MWClient implements ClientModInitializer {
 		ClientPickBlockGatherCallback.EVENT.register((player, result) -> {
 			Item item = player.getMainHandStack().getItem();
 			int index = -1;
-			if (MWConfig.toolPicking.holdTool && (isTool(item) || isWeapon(item))) {
+			if (MouseWheelie.CONFIG.toolPicking.holdTool() && (isTool(item) || isWeapon(item))) {
 				ToolPicker toolPicker = new ToolPicker(player.getInventory());
 				if (result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
 					index = toolPicker.findToolFor(player.getWorld().getBlockState(((BlockHitResult) result).getBlockPos()));
@@ -88,7 +86,7 @@ public class MWClient implements ClientModInitializer {
 					index = toolPicker.findWeapon();
 				}
 			}
-			if (MWConfig.toolPicking.holdBlock && item instanceof BlockItem && result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
+			if (MouseWheelie.CONFIG.toolPicking.holdBlock() && item instanceof BlockItem && result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
 				BlockState blockState = player.getWorld().getBlockState(((BlockHitResult) result).getBlockPos());
 				if (blockState.getBlock() == ((BlockItem) item).getBlock()) {
 					ToolPicker toolPicker = new ToolPicker(player.getInventory());

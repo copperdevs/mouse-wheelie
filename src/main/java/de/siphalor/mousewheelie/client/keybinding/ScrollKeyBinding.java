@@ -22,6 +22,7 @@ import de.siphalor.amecs.api.KeyBindingUtils;
 import de.siphalor.amecs.api.KeyModifiers;
 import de.siphalor.amecs.api.PriorityKeyBinding;
 import de.siphalor.mousewheelie.MWConfig;
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
@@ -36,6 +37,6 @@ public class ScrollKeyBinding extends AmecsKeyBinding implements PriorityKeyBind
 
 	@Override
 	public boolean onPressedPriority() {
-		return MWClient.triggerScroll(MWClient.getMouseX(), MWClient.getMouseY(), scrollDown == MWConfig.scrolling.invert ? -1D : 1D);
+		return MWClient.triggerScroll(MWClient.getMouseX(), MWClient.getMouseY(), scrollDown == MouseWheelie.CONFIG.scrolling.invert() ? -1D : 1D);
 	}
 }
