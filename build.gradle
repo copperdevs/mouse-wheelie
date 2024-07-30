@@ -38,7 +38,7 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation(include("de.siphalor:amecsapi-$minecraft_major_version:${project.amecs_version}")) {
+    modImplementation(include("de.siphalor:amecsapi-${project.amecs_version}")) {
         exclude group: "net.fabricmc.fabric-api"
     }
 
