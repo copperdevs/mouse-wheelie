@@ -17,17 +17,14 @@
 
 package de.siphalor.mousewheelie.client.inventory;
 
-import de.siphalor.mousewheelie.MWConfig;
 import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
@@ -194,7 +191,7 @@ public class SlotRefiller {
 
 	private static void refillFromHotbar(Hand hand, int hotbarSlot) {
 		if (MouseWheelie.CONFIG.refill.restoreSelectedSlot()) {
-			if (hand == Hand.MAIN_HAND && !playerInventory.offHand.get(0).isEmpty()) {
+			if (hand == Hand.MAIN_HAND && !playerInventory.offHand.getFirst().isEmpty()) {
 				InteractionManager.push(InteractionManager.SWAP_WITH_OFFHAND_EVENT);
 			}
 			InteractionManager.push(new InteractionManager.PacketEvent(new UpdateSelectedSlotC2SPacket(hotbarSlot), InteractionManager.Waiter.equal(InteractionManager.TriggerType.HELD_ITEM_CHANGE)));

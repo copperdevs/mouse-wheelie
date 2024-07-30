@@ -2,11 +2,9 @@ package de.siphalor.mousewheelie.network;
 
 import de.siphalor.mousewheelie.MouseWheelie;
 import lombok.CustomLog;
-import net.minecraft.client.Mouse;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,9 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @CustomLog
 public record ReorderInventoryPayload(int syncId, int[] slotMappings) implements CustomPayload {
 
-    public static final PacketCodec<PacketByteBuf, ReorderInventoryPayload> CODEC =
-            PacketCodec.of(ReorderInventoryPayload::write, ReorderInventoryPayload::read);
-//    public static final Id<ReorderInventoryPayload> ID = CustomPayload.id(MouseWheelie.MOD_ID + ":reorder_inventory_c2s");
+    public static final PacketCodec<PacketByteBuf, ReorderInventoryPayload> CODEC = PacketCodec.of(ReorderInventoryPayload::write, ReorderInventoryPayload::read);
     public static final Id<ReorderInventoryPayload> ID = new Id<>(MouseWheelie.id("reorder_inventory_c2s"));
 
     @Override

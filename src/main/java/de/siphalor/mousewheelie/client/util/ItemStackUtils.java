@@ -18,9 +18,7 @@
 package de.siphalor.mousewheelie.client.util;
 
 import com.google.common.collect.Sets;
-import de.siphalor.mousewheelie.MWConfig;
 import de.siphalor.mousewheelie.MouseWheelie;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.component.Component;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
