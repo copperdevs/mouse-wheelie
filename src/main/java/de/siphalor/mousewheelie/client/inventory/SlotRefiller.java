@@ -28,6 +28,7 @@ import net.minecraft.client.Mouse;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
 import net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket;
@@ -128,7 +129,7 @@ public class SlotRefiller {
 		if (isRefillInProgress()) {
 			return false;
 		}
-		if (stack.getItem() == Items.TRIDENT && EnchantmentHelper.getLoyalty(stack) > 0) {
+		if (stack.getItem() == Items.TRIDENT && MouseWheelie.getEnchantmentLevel(Enchantments.LOYALTY, stack) > 0) {
 			return false;
 		}
 

@@ -81,7 +81,7 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
 	private RecipeMatcher recipeFinder;
 
 	@Shadow
-	protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
+	protected AbstractRecipeScreenHandler<?,?> craftingScreenHandler;
 
 	@Override
 	public ScrollAction mouseWheelie_scrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {

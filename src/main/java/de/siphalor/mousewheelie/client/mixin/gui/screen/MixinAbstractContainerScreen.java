@@ -30,6 +30,7 @@ import de.siphalor.mousewheelie.client.util.ScrollAction;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -269,8 +270,8 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 
 			//noinspection ConstantConditions
 			if (scrollAmount < 0 && (Object) this instanceof InventoryScreen) {
-				EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(hoveredSlot.getStack());
-				if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
+				EquipmentSlot equipmentSlot = MouseWheelie.getPlayerPreferredEquipmentSlot(hoveredSlot.getStack());
+				if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
 					int hoveredSlotId = ((ISlot) hoveredSlot).mouseWheelie_getIdInContainer();
 					InteractionManager.pushClickEvent(handler.syncId, hoveredSlotId, 0, SlotActionType.PICKUP);
 					InteractionManager.pushClickEvent(handler.syncId, 8 - equipmentSlot.getEntitySlotId(), 0, SlotActionType.PICKUP);

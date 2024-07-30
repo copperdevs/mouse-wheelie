@@ -69,7 +69,7 @@ public class MWConfigModel {
     }
 
     @Nest
-    public static Refill refill = new Refill();
+    public Refill refill = new Refill();
 
     public static class Refill {
         public boolean enable = true;

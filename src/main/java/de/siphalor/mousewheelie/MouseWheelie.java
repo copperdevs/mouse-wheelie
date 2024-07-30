@@ -23,11 +23,18 @@ import de.siphalor.mousewheelie.client.util.CreativeSearchOrder;
 import de.siphalor.mousewheelie.common.network.MWLogicalServerNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import de.siphalor.mousewheelie.MWConfig;
@@ -37,6 +44,10 @@ public class MouseWheelie implements ModInitializer {
     public static final String MOD_NAME = "Mouse Wheelie";
 
     public static MWConfig CONFIG = MWConfig.createAndLoad();
+
+    public static Identifier id(String id) {
+        return Identifier.of(MOD_ID, id);
+    }
 
     @Override
     public void onInitialize() {
@@ -69,8 +80,8 @@ public class MouseWheelie implements ModInitializer {
     private TypedActionResult<ItemStack> onPlayerUseItem(PlayerEntity player, World world, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         if (CONFIG.general.enableQuickArmorSwapping() && !world.isClient()) {
-            EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
-            if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
+            EquipmentSlot equipmentSlot = MouseWheelie.getPlayerPreferredEquipmentSlot(stack);
+            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 ItemStack equipmentStack = player.getEquippedStack(equipmentSlot);
                 int index = 5 + (3 - equipmentSlot.getEntitySlotId());
                 if (!equipmentStack.isEmpty() && player.playerScreenHandler.getSlot(index).canTakeItems(player)) {
@@ -81,5 +92,26 @@ public class MouseWheelie implements ModInitializer {
             }
         }
         return TypedActionResult.pass(stack);
+    }
+
+    public static EquipmentSlot getPlayerPreferredEquipmentSlot(ItemStack stack) {
+        var player = MinecraftClient.getInstance().player;
+
+        if (player == null)
+            return null;
+
+        return player.getPreferredEquipmentSlot(stack);
+    }
+
+    public static int getEnchantmentLevel(RegistryKey<Enchantment> enchantment, ItemStack stack) {
+        int level = 0;
+        ItemEnchantmentsComponent itemEnchantmentsComponent = stack.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
+        for (RegistryEntry<Enchantment> entry : itemEnchantmentsComponent.getEnchantments()) {
+            if (entry.matchesKey(enchantment)) {
+                level = itemEnchantmentsComponent.getLevel(entry);
+            }
+        }
+
+        return level;
     }
 }
