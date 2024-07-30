@@ -22,5 +22,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface ISpecialScrollableScreen {
-	ScrollAction mouseWheelie_onMouseScrolledSpecial(double mouseX, double mouseY, double scrollAmount);
+    ScrollAction mouseWheelie_onMouseScrolledSpecial(double mouseX, double mouseY, double scrollAmount);
 }

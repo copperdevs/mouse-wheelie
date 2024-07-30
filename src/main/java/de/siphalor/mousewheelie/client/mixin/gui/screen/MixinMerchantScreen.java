@@ -25,24 +25,27 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(MerchantScreen.class)
 public abstract class MixinMerchantScreen implements IMerchantScreen {
 
-	@Shadow private int selectedIndex;
+    @Shadow
+    private int selectedIndex;
 
-	@Shadow protected abstract void syncRecipeIndex();
+    @Shadow
+    protected abstract void syncRecipeIndex();
 
-	@Shadow private int indexStartOffset;
+    @Shadow
+    private int indexStartOffset;
 
-	@Override
-	public void mouseWheelie_setRecipeId(int id) {
-		selectedIndex = id;
-	}
+    @Override
+    public void mouseWheelie_setRecipeId(int id) {
+        selectedIndex = id;
+    }
 
-	@Override
-	public void mouseWheelie_syncRecipeId() {
-		syncRecipeIndex();
-	}
+    @Override
+    public void mouseWheelie_syncRecipeId() {
+        syncRecipeIndex();
+    }
 
-	@Override
-	public int getRecipeIdOffset() {
-		return indexStartOffset;
-	}
+    @Override
+    public int getRecipeIdOffset() {
+        return indexStartOffset;
+    }
 }

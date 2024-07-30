@@ -24,6 +24,7 @@ import de.siphalor.mousewheelie.client.util.StackMatcher;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.Getter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
@@ -42,16 +43,14 @@ public abstract class SortMode {
     public static final SortMode QUANTITY;
     public static final SortMode RAW_ID;
 
+    @Getter
     public enum SortModeType {
         NONE(SortMode.NONE), ALPHABET(SortMode.ALPHABET), CREATIVE(SortMode.CREATIVE), QUANTITY(SortMode.QUANTITY), RAW_ID(SortMode.RAW_ID);
 
-        private SortMode mode;
+        private final SortMode mode;
 
-        public SortMode getMode() {
-            return mode;
-        }
-
-        SortModeType(SortMode none) {
+        SortModeType(SortMode newMode) {
+            mode = newMode;
         }
     }
 
@@ -104,8 +103,7 @@ public abstract class SortMode {
 
                 IntArrays.quickSort(sortIds, (a, b) -> {
                     if (strings[a].equals("")) {
-                        if (strings[b].equals(""))
-                            return 0;
+                        if (strings[b].equals("")) return 0;
                         return 1;
                     }
                     if (strings[b].equals("")) return -1;

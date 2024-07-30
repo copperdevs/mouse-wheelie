@@ -22,5 +22,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface IRecipeBookWidget {
-	ScrollAction mouseWheelie_scrollRecipeBook(double mouseX, double mouseY, double scrollAmount);
+    ScrollAction mouseWheelie_scrollRecipeBook(double mouseX, double mouseY, double scrollAmount);
 }

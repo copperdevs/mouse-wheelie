@@ -59,251 +59,243 @@ import java.util.function.Supplier;
 @SuppressWarnings("WeakerAccess")
 @Mixin(HandledScreen.class)
 public abstract class MixinAbstractContainerScreen extends Screen implements IContainerScreen {
-	protected MixinAbstractContainerScreen(Text textComponent_1) {
-		super(textComponent_1);
-	}
+    protected MixinAbstractContainerScreen(Text textComponent_1) {
+        super(textComponent_1);
+    }
 
-	@Shadow
-	protected abstract Slot getSlotAt(double double_1, double double_2);
+    @Shadow
+    protected abstract Slot getSlotAt(double double_1, double double_2);
 
-	@Shadow
-	protected abstract void onMouseClick(Slot slot_1, int int_1, int int_2, SlotActionType slotActionType_1);
+    @Shadow
+    protected abstract void onMouseClick(Slot slot_1, int int_1, int int_2, SlotActionType slotActionType_1);
 
-	@Shadow
-	@Final
-	protected ScreenHandler handler;
+    @Shadow
+    @Final
+    protected ScreenHandler handler;
 
-	@Shadow
-	protected Slot focusedSlot;
+    @Shadow
+    protected Slot focusedSlot;
 
-	@Shadow
-	private @Nullable Slot touchDragSlotStart;
-	@Shadow
-	protected boolean cursorDragging;
-	@SuppressWarnings({"ConstantConditions", "unchecked"})
-	@Unique
-	private final Supplier<ContainerScreenHelper<HandledScreen<ScreenHandler>>> screenHelper = Suppliers.memoize(
-			() -> ContainerScreenHelper.of((HandledScreen<ScreenHandler>) (Object) this, (slot, data, slotActionType) -> new InteractionManager.CallbackEvent(() -> {
-				onMouseClick(slot, ((ISlot) slot).mouseWheelie_getIdInContainer(), data, slotActionType);
-				return InteractionManager.TICK_WAITER;
-			}, true))
-	);
+    @Shadow
+    private @Nullable Slot touchDragSlotStart;
+    @Shadow
+    protected boolean cursorDragging;
+    @SuppressWarnings({"ConstantConditions", "unchecked"})
+    @Unique
+    private final Supplier<ContainerScreenHelper<HandledScreen<ScreenHandler>>> screenHelper = Suppliers.memoize(() -> ContainerScreenHelper.of((HandledScreen<ScreenHandler>) (Object) this, (slot, data, slotActionType) -> new InteractionManager.CallbackEvent(() -> {
+        onMouseClick(slot, ((ISlot) slot).mouseWheelie_getIdInContainer(), data, slotActionType);
+        return InteractionManager.TICK_WAITER;
+    }, true)));
 
-	@Unique
-	private Slot lastBundleInteractionSlot;
-	@Unique
-	private BundleDragMode bundleDragMode;
+    @Unique
+    private Slot lastBundleInteractionSlot;
+    @Unique
+    private BundleDragMode bundleDragMode;
 
-	@Inject(method = "mouseDragged", at = @At("RETURN"))
-	public void onMouseDragged(double x, double y, int button, double deltaX, double deltaY, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		Collection<Slot> slots = Collections.emptyList();
-		Slot hoveredSlot = getSlotAt(x, y);
+    @Inject(method = "mouseDragged", at = @At("RETURN"))
+    public void onMouseDragged(double x, double y, int button, double deltaX, double deltaY, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        Collection<Slot> slots = Collections.emptyList();
+        Slot hoveredSlot = getSlotAt(x, y);
 
-		if (MouseWheelie.CONFIG.general.betterFastDragging()) {
-			double dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-			if (dist > 16.0) {
-				slots = new ArrayList<>();
-				if (hoveredSlot != null) {
-					slots.add(hoveredSlot);
-				}
+        if (MouseWheelie.CONFIG.general.betterFastDragging()) {
+            double dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            if (dist > 16.0) {
+                slots = new ArrayList<>();
+                if (hoveredSlot != null) {
+                    slots.add(hoveredSlot);
+                }
 
-				for (int i = 0; i < MathHelper.floor(dist / 16.0); i++) {
-					double curX = x + deltaX - deltaX / dist * 16.0 * i;
-					double curY = y + deltaY - deltaY / dist * 16.0 * i;
-					Slot curSlot = getSlotAt(curX, curY);
-					if (curSlot != null) {
-						slots.add(curSlot);
-					}
-				}
-			}
-		}
-		if (slots.isEmpty()) {
-			if (hoveredSlot != null && !hoveredSlot.getStack().isEmpty()) {
-				slots = Collections.singletonList(hoveredSlot);
-			} else {
-				return;
-			}
-		}
+                for (int i = 0; i < MathHelper.floor(dist / 16.0); i++) {
+                    double curX = x + deltaX - deltaX / dist * 16.0 * i;
+                    double curY = y + deltaY - deltaY / dist * 16.0 * i;
+                    Slot curSlot = getSlotAt(curX, curY);
+                    if (curSlot != null) {
+                        slots.add(curSlot);
+                    }
+                }
+            }
+        }
+        if (slots.isEmpty()) {
+            if (hoveredSlot != null && !hoveredSlot.getStack().isEmpty()) {
+                slots = Collections.singletonList(hoveredSlot);
+            } else {
+                return;
+            }
+        }
 
-		ContainerScreenHelper<?> screenHelper = this.screenHelper.get();
-		if (button == 0) { // Left mouse button
-			if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
-				for (Slot slot : slots) {
-					screenHelper.dropStackLocked(slot);
-				}
-			} else if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
-				for (Slot slot : slots) {
-					screenHelper.sendStackLocked(slot);
-				}
-			} else if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
-				for (Slot slot : slots) {
-					screenHelper.sendAllOfAKind(slot);
-				}
-			}
-		} else if (button == 1) { // Right mouse button
-			ItemStack cursorStack = handler.getCursorStack();
+        ContainerScreenHelper<?> screenHelper = this.screenHelper.get();
+        if (button == 0) { // Left mouse button
+            if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
+                for (Slot slot : slots) {
+                    screenHelper.dropStackLocked(slot);
+                }
+            } else if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
+                for (Slot slot : slots) {
+                    screenHelper.sendStackLocked(slot);
+                }
+            } else if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
+                for (Slot slot : slots) {
+                    screenHelper.sendAllOfAKind(slot);
+                }
+            }
+        } else if (button == 1) { // Right mouse button
+            ItemStack cursorStack = handler.getCursorStack();
 
-			if (!cursorStack.isEmpty() && bundleDragMode != null && cursorStack.getItem() instanceof BundleItem item) {
-				Slot lastSlot = null;
-				for (Slot slot : slots) {
-					if (slot == lastBundleInteractionSlot) {
-						continue;
-					}
-					if (bundleDragMode == BundleDragMode.AUTO) {
-						if (slot.getStack().isEmpty()) {
-							if (item.isItemBarVisible(cursorStack)) {
-								bundleDragMode = BundleDragMode.PUTTING_OUT;
-							}
-						} else {
-							bundleDragMode = BundleDragMode.PICKING_UP;
-						}
-					}
-					if (bundleDragMode == BundleDragMode.PICKING_UP && slot.getStack().isEmpty()) {
-						continue;
-					}
-					if (bundleDragMode == BundleDragMode.PUTTING_OUT && !slot.getStack().isEmpty()) {
-						continue;
-					}
+            if (!cursorStack.isEmpty() && bundleDragMode != null && cursorStack.getItem() instanceof BundleItem item) {
+                Slot lastSlot = null;
+                for (Slot slot : slots) {
+                    if (slot == lastBundleInteractionSlot) {
+                        continue;
+                    }
+                    if (bundleDragMode == BundleDragMode.AUTO) {
+                        if (slot.getStack().isEmpty()) {
+                            if (item.isItemBarVisible(cursorStack)) {
+                                bundleDragMode = BundleDragMode.PUTTING_OUT;
+                            }
+                        } else {
+                            bundleDragMode = BundleDragMode.PICKING_UP;
+                        }
+                    }
+                    if (bundleDragMode == BundleDragMode.PICKING_UP && slot.getStack().isEmpty()) {
+                        continue;
+                    }
+                    if (bundleDragMode == BundleDragMode.PUTTING_OUT && !slot.getStack().isEmpty()) {
+                        continue;
+                    }
 
-					onMouseClick(slot, slot.id, 1, SlotActionType.PICKUP);
+                    onMouseClick(slot, slot.id, 1, SlotActionType.PICKUP);
 
-					lastSlot = slot;
-				}
-				if (lastSlot != null) {
-					lastBundleInteractionSlot = lastSlot;
-				}
-			}
-		}
-	}
+                    lastSlot = slot;
+                }
+                if (lastSlot != null) {
+                    lastBundleInteractionSlot = lastSlot;
+                }
+            }
+        }
+    }
 
-	// Fires on mouse down
-	@Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-	public void onMouseClick(double x, double y, int button, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		if (button == 0) {
-			Slot hoveredSlot = getSlotAt(x, y);
-			if (hoveredSlot == null) {
-				return;
-			}
+    // Fires on mouse down
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    public void onMouseClick(double x, double y, int button, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        if (button == 0) {
+            Slot hoveredSlot = getSlotAt(x, y);
+            if (hoveredSlot == null) {
+                return;
+            }
 
-			boolean success = true;
-			if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
-				if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
-					if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
-						screenHelper.get().dropAllFrom(hoveredSlot);
-					} else {
-						screenHelper.get().dropAllOfAKind(hoveredSlot);
-					}
-				} else {
-					onMouseClick(hoveredSlot, ((ISlot) hoveredSlot).mouseWheelie_getIdInContainer(), 1, SlotActionType.THROW);
-				}
-			} else if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
-				if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
-					screenHelper.get().sendAllFrom(hoveredSlot);
-				} else {
-					screenHelper.get().sendAllOfAKind(hoveredSlot);
-				}
-			} else if (MWClient.DEPOSIT_MODIFIER.isPressed()) {
-				screenHelper.get().depositAllFrom(hoveredSlot);
-			} else if (MWClient.RESTOCK_MODIFIER.isPressed()) {
-				if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
-					screenHelper.get().restockAll(hoveredSlot);
-				} else {
-					screenHelper.get().restockAllOfAKind(hoveredSlot);
-				}
-			} else {
-				success = false;
-			}
-			if (success) {
-				callbackInfoReturnable.setReturnValue(true);
-			}
-		} else if (button == 1) {
-			ItemStack cursorStack = handler.getCursorStack();
-			if (!cursorStack.isEmpty() && MouseWheelie.CONFIG.general.enableBundleDragging() && cursorStack.getItem() instanceof BundleItem item) {
-				Slot hoveredSlot = getSlotAt(x, y);
-				if (hoveredSlot == null) {
-					bundleDragMode = BundleDragMode.AUTO;
-				} else if (hoveredSlot.getStack().isEmpty()) {
-					if (item.isItemBarVisible(cursorStack)) {
-						bundleDragMode = BundleDragMode.PUTTING_OUT;
-					} else {
-						bundleDragMode = BundleDragMode.AUTO;
-					}
-				} else {
-					bundleDragMode = BundleDragMode.PICKING_UP;
-				}
-				if (hoveredSlot != null) {
-					onMouseClick(hoveredSlot, hoveredSlot.id, 1, SlotActionType.PICKUP);
-				}
-			}
-		}
-	}
+            boolean success = true;
+            if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
+                if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
+                    if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
+                        screenHelper.get().dropAllFrom(hoveredSlot);
+                    } else {
+                        screenHelper.get().dropAllOfAKind(hoveredSlot);
+                    }
+                } else {
+                    onMouseClick(hoveredSlot, ((ISlot) hoveredSlot).mouseWheelie_getIdInContainer(), 1, SlotActionType.THROW);
+                }
+            } else if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
+                if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
+                    screenHelper.get().sendAllFrom(hoveredSlot);
+                } else {
+                    screenHelper.get().sendAllOfAKind(hoveredSlot);
+                }
+            } else if (MWClient.DEPOSIT_MODIFIER.isPressed()) {
+                screenHelper.get().depositAllFrom(hoveredSlot);
+            } else if (MWClient.RESTOCK_MODIFIER.isPressed()) {
+                if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
+                    screenHelper.get().restockAll(hoveredSlot);
+                } else {
+                    screenHelper.get().restockAllOfAKind(hoveredSlot);
+                }
+            } else {
+                success = false;
+            }
+            if (success) {
+                callbackInfoReturnable.setReturnValue(true);
+            }
+        } else if (button == 1) {
+            ItemStack cursorStack = handler.getCursorStack();
+            if (!cursorStack.isEmpty() && MouseWheelie.CONFIG.general.enableBundleDragging() && cursorStack.getItem() instanceof BundleItem item) {
+                Slot hoveredSlot = getSlotAt(x, y);
+                if (hoveredSlot == null) {
+                    bundleDragMode = BundleDragMode.AUTO;
+                } else if (hoveredSlot.getStack().isEmpty()) {
+                    if (item.isItemBarVisible(cursorStack)) {
+                        bundleDragMode = BundleDragMode.PUTTING_OUT;
+                    } else {
+                        bundleDragMode = BundleDragMode.AUTO;
+                    }
+                } else {
+                    bundleDragMode = BundleDragMode.PICKING_UP;
+                }
+                if (hoveredSlot != null) {
+                    onMouseClick(hoveredSlot, hoveredSlot.id, 1, SlotActionType.PICKUP);
+                }
+            }
+        }
+    }
 
-	// Fires on mouse up
-	@Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
-	public void onMouseRelease(double x, double y, int button, CallbackInfoReturnable<Boolean> cir) {
-		if (bundleDragMode != null) {
-			touchDragSlotStart = null;
-			cursorDragging = false;
-			cir.setReturnValue(true);
-		}
-		lastBundleInteractionSlot = null;
-		bundleDragMode = null;
-	}
+    // Fires on mouse up
+    @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
+    public void onMouseRelease(double x, double y, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (bundleDragMode != null) {
+            touchDragSlotStart = null;
+            cursorDragging = false;
+            cir.setReturnValue(true);
+        }
+        lastBundleInteractionSlot = null;
+        bundleDragMode = null;
+    }
 
-	@Override
-	public Slot mouseWheelie_getSlotAt(double mouseX, double mouseY) {
-		return getSlotAt(mouseX, mouseY);
-	}
+    @Override
+    public Slot mouseWheelie_getSlotAt(double mouseX, double mouseY) {
+        return getSlotAt(mouseX, mouseY);
+    }
 
-	@Override
-	public ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount) {
-		if (MouseWheelie.CONFIG.scrolling.enable()) {
-			if (hasAltDown()) return ScrollAction.FAILURE;
-			Slot hoveredSlot = getSlotAt(mouseX, mouseY);
-			if (hoveredSlot == null)
-				return ScrollAction.PASS;
-			if (hoveredSlot.getStack().isEmpty())
-				return ScrollAction.PASS;
+    @Override
+    public ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount) {
+        if (MouseWheelie.CONFIG.scrolling.enable()) {
+            if (hasAltDown()) return ScrollAction.FAILURE;
+            Slot hoveredSlot = getSlotAt(mouseX, mouseY);
+            if (hoveredSlot == null) return ScrollAction.PASS;
+            if (hoveredSlot.getStack().isEmpty()) return ScrollAction.PASS;
 
-			//noinspection ConstantConditions
-			if (scrollAmount < 0 && (Object) this instanceof InventoryScreen) {
-				EquipmentSlot equipmentSlot = MouseWheelie.getPlayerPreferredEquipmentSlot(hoveredSlot.getStack());
-				if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
-					int hoveredSlotId = ((ISlot) hoveredSlot).mouseWheelie_getIdInContainer();
-					InteractionManager.pushClickEvent(handler.syncId, hoveredSlotId, 0, SlotActionType.PICKUP);
-					InteractionManager.pushClickEvent(handler.syncId, 8 - equipmentSlot.getEntitySlotId(), 0, SlotActionType.PICKUP);
-					InteractionManager.pushClickEvent(handler.syncId, hoveredSlotId, 0, SlotActionType.PICKUP);
-					return ScrollAction.SUCCESS;
-				}
-			}
+            //noinspection ConstantConditions
+            if (scrollAmount < 0 && (Object) this instanceof InventoryScreen) {
+                EquipmentSlot equipmentSlot = MouseWheelie.getPlayerPreferredEquipmentSlot(hoveredSlot.getStack());
+                if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                    int hoveredSlotId = ((ISlot) hoveredSlot).mouseWheelie_getIdInContainer();
+                    InteractionManager.pushClickEvent(handler.syncId, hoveredSlotId, 0, SlotActionType.PICKUP);
+                    InteractionManager.pushClickEvent(handler.syncId, 8 - equipmentSlot.getEntitySlotId(), 0, SlotActionType.PICKUP);
+                    InteractionManager.pushClickEvent(handler.syncId, hoveredSlotId, 0, SlotActionType.PICKUP);
+                    return ScrollAction.SUCCESS;
+                }
+            }
 
-			screenHelper.get().scroll(hoveredSlot, scrollAmount < 0);
-			return ScrollAction.SUCCESS;
-		}
-		return ScrollAction.PASS;
-	}
+            screenHelper.get().scroll(hoveredSlot, scrollAmount < 0);
+            return ScrollAction.SUCCESS;
+        }
+        return ScrollAction.PASS;
+    }
 
-	@SuppressWarnings("ConstantConditions")
-	@Override
-	public boolean mouseWheelie_triggerSort() {
-		if (focusedSlot == null)
-			return false;
-		PlayerEntity player = MinecraftClient.getInstance().player;
-		if (player.getAbilities().creativeMode
-				&& GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_MIDDLE) != 0
-				&& (!focusedSlot.getStack().isEmpty() == handler.getCursorStack().isEmpty()))
-			return false;
-		InventorySorter sorter = new InventorySorter(screenHelper.get(), (HandledScreen<?>) (Object) this, focusedSlot);
-		SortMode sortMode;
-		if (hasShiftDown()) {
-			sortMode = MouseWheelie.CONFIG.sort.shiftSort().getMode();
-		} else if (hasControlDown()) {
-			sortMode = MouseWheelie.CONFIG.sort.controlSort().getMode();
-		} else {
-			sortMode = MouseWheelie.CONFIG.sort.primarySort().getMode();
-		}
-		if (sortMode == null) return false;
-		sorter.sort(sortMode);
-		return true;
-	}
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public boolean mouseWheelie_triggerSort() {
+        if (focusedSlot == null) return false;
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        if (player.getAbilities().creativeMode && GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_MIDDLE) != 0 && (!focusedSlot.getStack().isEmpty() == handler.getCursorStack().isEmpty())) return false;
+        InventorySorter sorter = new InventorySorter(screenHelper.get(), (HandledScreen<?>) (Object) this, focusedSlot);
+        SortMode sortMode;
+        if (hasShiftDown()) {
+            sortMode = MouseWheelie.CONFIG.sort.shiftSort().getMode();
+        } else if (hasControlDown()) {
+            sortMode = MouseWheelie.CONFIG.sort.controlSort().getMode();
+        } else {
+            sortMode = MouseWheelie.CONFIG.sort.primarySort().getMode();
+        }
+        if (sortMode == null) return false;
+        sorter.sort(sortMode);
+        return true;
+    }
 }

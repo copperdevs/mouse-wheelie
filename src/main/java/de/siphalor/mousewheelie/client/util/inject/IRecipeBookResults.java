@@ -21,11 +21,11 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface IRecipeBookResults {
-	void mouseWheelie_setCurrentPage(int page);
+    void mouseWheelie_setCurrentPage(int page);
 
-	int mouseWheelie_getCurrentPage();
+    int mouseWheelie_getCurrentPage();
 
-	int mouseWheelie_getPageCount();
+    int mouseWheelie_getPageCount();
 
-	void mouseWheelie_refreshResultButtons();
+    void mouseWheelie_refreshResultButtons();
 }

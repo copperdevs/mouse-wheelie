@@ -25,19 +25,20 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Slot.class)
 public class MixinSlot implements ISlot {
-	@Shadow
-	@Final
-	private int index;
+    @Shadow
+    @Final
+    private int index;
 
-	@Shadow public int id;
+    @Shadow
+    public int id;
 
-	@Override
-	public int mouseWheelie_getIndexInInv() {
-		return index;
-	}
+    @Override
+    public int mouseWheelie_getIndexInInv() {
+        return index;
+    }
 
-	@Override
-	public int mouseWheelie_getIdInContainer() {
-		return id;
-	}
+    @Override
+    public int mouseWheelie_getIdInContainer() {
+        return id;
+    }
 }

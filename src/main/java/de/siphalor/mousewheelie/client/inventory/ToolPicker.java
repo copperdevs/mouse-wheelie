@@ -17,7 +17,6 @@
 
 package de.siphalor.mousewheelie.client.inventory;
 
-import de.siphalor.mousewheelie.MWConfig;
 import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
 import lombok.RequiredArgsConstructor;
@@ -32,67 +31,65 @@ import net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket;
 @Environment(EnvType.CLIENT)
 @RequiredArgsConstructor
 public class ToolPicker {
-	private final PlayerInventory inventory;
+    private final PlayerInventory inventory;
 
-	static int lastToolPickSlot = -1;
+    static int lastToolPickSlot = -1;
 
-	public static synchronized void setLastToolPickSlot(int lastToolPickSlot) {
-		ToolPicker.lastToolPickSlot = lastToolPickSlot;
-	}
+    public static synchronized void setLastToolPickSlot(int lastToolPickSlot) {
+        ToolPicker.lastToolPickSlot = lastToolPickSlot;
+    }
 
-	public int findToolFor(BlockState blockState) {
-		float bestBreakSpeed = 1.0F;
-		int bestSpeedSlot = -1;
-		int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
-		for (int i = 1; i <= invSize; i++) {
-			int index = (i + lastToolPickSlot) % invSize;
-			if (index == inventory.selectedSlot) continue;
-			ItemStack stack = inventory.main.get(index);
-			if (stack.isSuitableFor(blockState)) {
-				return index;
-			} else {
-				float breakSpeed = stack.getMiningSpeedMultiplier(blockState);
-				if (breakSpeed > bestBreakSpeed) {
-					bestSpeedSlot = index;
-					bestBreakSpeed = breakSpeed;
-				}
-			}
-		}
-		if (bestSpeedSlot == -1) {
-			ItemStack stack = inventory.main.get(inventory.selectedSlot);
-			if (stack.isSuitableFor(blockState) || stack.getMiningSpeedMultiplier(blockState) > 1.0F)
-				return inventory.selectedSlot;
-		}
-		return bestSpeedSlot;
-	}
+    public int findToolFor(BlockState blockState) {
+        float bestBreakSpeed = 1.0F;
+        int bestSpeedSlot = -1;
+        int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
+        for (int i = 1; i <= invSize; i++) {
+            int index = (i + lastToolPickSlot) % invSize;
+            if (index == inventory.selectedSlot) continue;
+            ItemStack stack = inventory.main.get(index);
+            if (stack.isSuitableFor(blockState)) {
+                return index;
+            } else {
+                float breakSpeed = stack.getMiningSpeedMultiplier(blockState);
+                if (breakSpeed > bestBreakSpeed) {
+                    bestSpeedSlot = index;
+                    bestBreakSpeed = breakSpeed;
+                }
+            }
+        }
+        if (bestSpeedSlot == -1) {
+            ItemStack stack = inventory.main.get(inventory.selectedSlot);
+            if (stack.isSuitableFor(blockState) || stack.getMiningSpeedMultiplier(blockState) > 1.0F) return inventory.selectedSlot;
+        }
+        return bestSpeedSlot;
+    }
 
-	public boolean pickToolFor(BlockState blockState) {
-		return pick(findToolFor(blockState));
-	}
+    public boolean pickToolFor(BlockState blockState) {
+        return pick(findToolFor(blockState));
+    }
 
-	public int findWeapon() {
-		int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
-		for (int i = 1; i <= invSize; i++) {
-			int index = (i + lastToolPickSlot) % invSize;
-			if (index == inventory.selectedSlot) continue;
-			if (MWClient.isWeapon(inventory.main.get(index).getItem()))
-				return index;
-		}
-		return -1;
-	}
+    public int findWeapon() {
+        int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
+        for (int i = 1; i <= invSize; i++) {
+            int index = (i + lastToolPickSlot) % invSize;
+            if (index == inventory.selectedSlot) continue;
+            if (MWClient.isWeapon(inventory.main.get(index).getItem())) return index;
+        }
+        return -1;
+    }
 
-	public boolean pickWeapon() {
-		return pick(findWeapon());
-	}
+    public boolean pickWeapon() {
+        return pick(findWeapon());
+    }
 
-	private boolean pick(int index) {
-		setLastToolPickSlot(index);
+    private boolean pick(int index) {
+        setLastToolPickSlot(index);
 
-		if (index != -1 && index != inventory.selectedSlot) {
-			PickFromInventoryC2SPacket packet = new PickFromInventoryC2SPacket(index);
-			MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
-			return true;
-		}
-		return false;
-	}
+        if (index != -1 && index != inventory.selectedSlot) {
+            PickFromInventoryC2SPacket packet = new PickFromInventoryC2SPacket(index);
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
+            return true;
+        }
+        return false;
+    }
 }

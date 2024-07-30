@@ -28,7 +28,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -97,8 +96,7 @@ public class MouseWheelie implements ModInitializer {
     public static EquipmentSlot getPlayerPreferredEquipmentSlot(ItemStack stack) {
         var player = MinecraftClient.getInstance().player;
 
-        if (player == null)
-            return null;
+        if (player == null) return null;
 
         return player.getPreferredEquipmentSlot(stack);
     }

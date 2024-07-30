@@ -33,16 +33,16 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(AbstractFurnaceScreen.class)
 public abstract class MixinAbstractFurnaceScreen extends HandledScreen<AbstractFurnaceScreenHandler> implements IScrollableRecipeBook {
 
-	@Shadow
-	@Final
-	public AbstractFurnaceRecipeBookScreen recipeBook;
+    @Shadow
+    @Final
+    public AbstractFurnaceRecipeBookScreen recipeBook;
 
-	public MixinAbstractFurnaceScreen(AbstractFurnaceScreenHandler container, PlayerInventory playerInventory, Text name) {
-		super(container, playerInventory, name);
-	}
+    public MixinAbstractFurnaceScreen(AbstractFurnaceScreenHandler container, PlayerInventory playerInventory, Text name) {
+        super(container, playerInventory, name);
+    }
 
-	@Override
-	public ScrollAction mouseWheelie_onMouseScrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
-		return ((IRecipeBookWidget) recipeBook).mouseWheelie_scrollRecipeBook(mouseX, mouseY, scrollAmount);
-	}
+    @Override
+    public ScrollAction mouseWheelie_onMouseScrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
+        return ((IRecipeBookWidget) recipeBook).mouseWheelie_scrollRecipeBook(mouseX, mouseY, scrollAmount);
+    }
 }

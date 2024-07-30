@@ -32,16 +32,16 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen extends AbstractInventoryScreen<PlayerScreenHandler> implements IScrollableRecipeBook {
-	@Shadow
-	@Final
-	private RecipeBookWidget recipeBook;
+    @Shadow
+    @Final
+    private RecipeBookWidget recipeBook;
 
-	public MixinInventoryScreen(PlayerScreenHandler container, PlayerInventory playerInventory, Text text) {
-		super(container, playerInventory, text);
-	}
+    public MixinInventoryScreen(PlayerScreenHandler container, PlayerInventory playerInventory, Text text) {
+        super(container, playerInventory, text);
+    }
 
-	@Override
-	public ScrollAction mouseWheelie_onMouseScrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
-		return ((IRecipeBookWidget) recipeBook).mouseWheelie_scrollRecipeBook(mouseX, mouseY, scrollAmount);
-	}
+    @Override
+    public ScrollAction mouseWheelie_onMouseScrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
+        return ((IRecipeBookWidget) recipeBook).mouseWheelie_scrollRecipeBook(mouseX, mouseY, scrollAmount);
+    }
 }

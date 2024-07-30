@@ -38,46 +38,46 @@ import java.util.Iterator;
 @Environment(EnvType.CLIENT)
 @Mixin(RecipeBookResults.class)
 public abstract class MixinRecipeBookResults implements IRecipeBookResults {
-	@Shadow
-	private int currentPage;
+    @Shadow
+    private int currentPage;
 
-	@Shadow
-	private int pageCount;
+    @Shadow
+    private int pageCount;
 
-	@Shadow
-	protected abstract void refreshResultButtons();
+    @Shadow
+    protected abstract void refreshResultButtons();
 
-	@Shadow
-	private RecipeEntry<?> lastClickedRecipe;
+    @Shadow
+    private RecipeEntry<?> lastClickedRecipe;
 
-	@Shadow
-	private RecipeResultCollection resultCollection;
+    @Shadow
+    private RecipeResultCollection resultCollection;
 
-	@Override
-	public void mouseWheelie_setCurrentPage(int page) {
-		currentPage = page;
-	}
+    @Override
+    public void mouseWheelie_setCurrentPage(int page) {
+        currentPage = page;
+    }
 
-	@Override
-	public int mouseWheelie_getCurrentPage() {
-		return currentPage;
-	}
+    @Override
+    public int mouseWheelie_getCurrentPage() {
+        return currentPage;
+    }
 
-	@Override
-	public int mouseWheelie_getPageCount() {
-		return pageCount;
-	}
+    @Override
+    public int mouseWheelie_getPageCount() {
+        return pageCount;
+    }
 
-	@Override
-	public void mouseWheelie_refreshResultButtons() {
-		refreshResultButtons();
-	}
+    @Override
+    public void mouseWheelie_refreshResultButtons() {
+        refreshResultButtons();
+    }
 
-	@Inject(method = "mouseClicked", at = @At(value = "JUMP", opcode = 154), locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void mouseClicked(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir, Iterator<?> iterator, AnimatedResultButton animatedResultButton) {
-		if (MouseWheelie.CONFIG.general.enableQuickCraft() && button == 1 && animatedResultButton.hasResults()) {
-			lastClickedRecipe = animatedResultButton.currentRecipe();
-			resultCollection = animatedResultButton.getResultCollection();
-		}
-	}
+    @Inject(method = "mouseClicked", at = @At(value = "JUMP", opcode = 154), locals = LocalCapture.CAPTURE_FAILSOFT)
+    public void mouseClicked(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir, Iterator<?> iterator, AnimatedResultButton animatedResultButton) {
+        if (MouseWheelie.CONFIG.general.enableQuickCraft() && button == 1 && animatedResultButton.hasResults()) {
+            lastClickedRecipe = animatedResultButton.currentRecipe();
+            resultCollection = animatedResultButton.getResultCollection();
+        }
+    }
 }

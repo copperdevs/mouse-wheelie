@@ -23,9 +23,9 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface IContainerScreen {
-	Slot mouseWheelie_getSlotAt(double mouseX, double mouseY);
+    Slot mouseWheelie_getSlotAt(double mouseX, double mouseY);
 
-	ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount);
+    ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount);
 
-	boolean mouseWheelie_triggerSort();
+    boolean mouseWheelie_triggerSort();
 }

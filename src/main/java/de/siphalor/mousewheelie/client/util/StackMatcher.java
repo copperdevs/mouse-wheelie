@@ -26,38 +26,38 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StackMatcher {
-	private final @NotNull Item item;
-	private final @Nullable ComponentMap componentMap;
+    private final @NotNull Item item;
+    private final @Nullable ComponentMap componentMap;
 
-	private StackMatcher(@NotNull Item item, @Nullable ComponentMap componentMap) {
-		this.item = item;
-		this.componentMap = componentMap;
-	}
+    private StackMatcher(@NotNull Item item, @Nullable ComponentMap componentMap) {
+        this.item = item;
+        this.componentMap = componentMap;
+    }
 
-	public static StackMatcher ignoreNbt(@NotNull ItemStack stack) {
-		return new StackMatcher(stack.getItem(), null);
-	}
+    public static StackMatcher ignoreNbt(@NotNull ItemStack stack) {
+        return new StackMatcher(stack.getItem(), null);
+    }
 
-	public static StackMatcher of(@NotNull ItemStack stack) {
-		return new StackMatcher(stack.getItem(), stack.getComponents());
-	}
+    public static StackMatcher of(@NotNull ItemStack stack) {
+        return new StackMatcher(stack.getItem(), stack.getComponents());
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof StackMatcher other) {
-			return item == other.item && Objects.equal(componentMap, other.componentMap);
-		}
-		if (obj instanceof ItemStack stack) {
-			return item == stack.getItem() && Objects.equal(componentMap, stack.getComponents());
-		}
-		if (obj instanceof Item objItem) {
-			return item == objItem;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof StackMatcher other) {
+            return item == other.item && Objects.equal(componentMap, other.componentMap);
+        }
+        if (obj instanceof ItemStack stack) {
+            return item == stack.getItem() && Objects.equal(componentMap, stack.getComponents());
+        }
+        if (obj instanceof Item objItem) {
+            return item == objItem;
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(item, componentMap);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(item, componentMap);
+    }
 }

@@ -119,7 +119,7 @@ public class ItemStackUtils {
     }
 
     public static ComponentMap getComponentOrEmpty(ItemStack stack) {
-        return stack.getComponentChanges().isEmpty() ? EMPTY_COMPONENT_MAP: stack.getComponents();
+        return stack.getComponentChanges().isEmpty() ? EMPTY_COMPONENT_MAP : stack.getComponents();
     }
 
     public static boolean areComponentsEqualExcept(ItemStack a, ItemStack b, String... componentNames) {
@@ -161,7 +161,7 @@ public class ItemStackUtils {
                 if (!ItemStack.areItemsEqual(stack1, stack2)) {
                     return false;
                 }
-                return areComponentsEqualExcept(stack1, stack2, DataComponentTypes.DAMAGE.toString(),DataComponentTypes.ENCHANTMENTS.toString());
+                return areComponentsEqualExcept(stack1, stack2, DataComponentTypes.DAMAGE.toString(), DataComponentTypes.ENCHANTMENTS.toString());
             }
         }
         return false; // unreachable
@@ -174,18 +174,15 @@ public class ItemStackUtils {
             case ALL:
                 return stack.hashCode();
             case SOME:
-                HashCodeBuilder hashCodeBuilder = new HashCodeBuilder()
-                        .append(stack.getItem());
+                HashCodeBuilder hashCodeBuilder = new HashCodeBuilder().append(stack.getItem());
 
                 ComponentMap componentMap = stack.getComponents();
                 if (componentMap == null) {
                     return hashCodeBuilder.toHashCode();
                 }
 
-                for (Component component : componentMap)
-                {
-                    if (!(component.comp_2443().equals(DataComponentTypes.DAMAGE) || component.comp_2443().equals(DataComponentTypes.ENCHANTMENTS)))
-                    {
+                for (Component component : componentMap) {
+                    if (!(component.comp_2443().equals(DataComponentTypes.DAMAGE) || component.comp_2443().equals(DataComponentTypes.ENCHANTMENTS))) {
                         hashCodeBuilder.append(component.comp_2443().toString()).append(component.comp_2444().toString());
                     }
                 }

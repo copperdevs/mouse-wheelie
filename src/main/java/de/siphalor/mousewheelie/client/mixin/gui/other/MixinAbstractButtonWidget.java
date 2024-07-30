@@ -27,17 +27,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClickableWidget.class)
 public abstract class MixinAbstractButtonWidget {
-	@Shadow
-	protected abstract boolean clicked(double double_1, double double_2);
+    @Shadow
+    protected abstract boolean clicked(double double_1, double double_2);
 
-	@Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/ClickableWidget;isValidClickButton(I)Z"), cancellable = true)
-	public void mouseClicked(double x, double y, int button, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		if (this.clicked(x, y)) {
-			if (this instanceof ISpecialClickableButtonWidget) {
-				if (((ISpecialClickableButtonWidget) this).mouseClicked(button)) {
-					callbackInfoReturnable.setReturnValue(true);
-				}
-			}
-		}
-	}
+    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/ClickableWidget;isValidClickButton(I)Z"), cancellable = true)
+    public void mouseClicked(double x, double y, int button, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        if (this.clicked(x, y)) {
+            if (this instanceof ISpecialClickableButtonWidget) {
+                if (((ISpecialClickableButtonWidget) this).mouseClicked(button)) {
+                    callbackInfoReturnable.setReturnValue(true);
+                }
+            }
+        }
+    }
 }

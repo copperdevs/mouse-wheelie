@@ -25,25 +25,25 @@ import net.minecraft.network.PacketByteBuf;
 
 public class MWClientNetworking extends MWNetworking {
 
-	private static int blockNextGuiUpdateRefillTriggers;
+    private static int blockNextGuiUpdateRefillTriggers;
 
-	public static boolean canSendReorderPacket() {
-		return ClientPlayNetworking.canSend(REORDER_INVENTORY_C2S_PACKET);
-	}
+    public static boolean canSendReorderPacket() {
+        return ClientPlayNetworking.canSend(REORDER_INVENTORY_C2S_PACKET);
+    }
 
-	public static void send(ReorderInventoryPayload payload) {
-		ClientPlayNetworking.send(payload);
-	}
+    public static void send(ReorderInventoryPayload payload) {
+        ClientPlayNetworking.send(payload);
+    }
 
-	public static synchronized void blockNextGuiUpdateRefillTriggers(int amount) {
-		blockNextGuiUpdateRefillTriggers += amount;
-	}
+    public static synchronized void blockNextGuiUpdateRefillTriggers(int amount) {
+        blockNextGuiUpdateRefillTriggers += amount;
+    }
 
-	public static synchronized boolean areGuiUpdateRefillTriggersBlocked() {
-		return blockNextGuiUpdateRefillTriggers > 0;
-	}
+    public static synchronized boolean areGuiUpdateRefillTriggersBlocked() {
+        return blockNextGuiUpdateRefillTriggers > 0;
+    }
 
-	public static synchronized void decrementGuiUpdateRefillTriggerBlocks() {
-		blockNextGuiUpdateRefillTriggers--;
-	}
+    public static synchronized void decrementGuiUpdateRefillTriggerBlocks() {
+        blockNextGuiUpdateRefillTriggers--;
+    }
 }

@@ -21,15 +21,15 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum ScrollAction {
-	PASS(false, false), SUCCESS(true, true), FAILURE(false, true), ABORT(true, false);
-	final boolean cancelCustomActions;
-	final boolean cancelAllActions;
+    PASS(false, false), SUCCESS(true, true), FAILURE(false, true), ABORT(true, false);
+    final boolean cancelCustomActions;
+    final boolean cancelAllActions;
 
-	public boolean cancelsAllActions() {
-		return cancelAllActions;
-	}
+    public boolean cancelsAllActions() {
+        return cancelAllActions;
+    }
 
-	public boolean cancelsCustomActions() {
-		return cancelCustomActions;
-	}
+    public boolean cancelsCustomActions() {
+        return cancelCustomActions;
+    }
 }

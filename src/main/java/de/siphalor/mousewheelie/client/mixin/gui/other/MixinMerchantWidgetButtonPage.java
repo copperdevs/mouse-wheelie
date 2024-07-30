@@ -36,26 +36,24 @@ import org.spongepowered.asm.mixin.Shadow;
 @Environment(EnvType.CLIENT)
 @Mixin(targets = "net/minecraft/client/gui/screen/ingame/MerchantScreen$WidgetButtonPage")
 public class MixinMerchantWidgetButtonPage implements ISpecialClickableButtonWidget {
-	@Shadow
-	@Final
-	int index;
+    @Shadow
+    @Final
+    int index;
 
-	@Override
-	public boolean mouseClicked(int mouseButton) {
-		if (mouseButton != 1 || !MouseWheelie.CONFIG.general.enableQuickCraft()) return false;
-		MinecraftClient minecraft = MinecraftClient.getInstance();
-		Screen screen = minecraft.currentScreen;
-		if (screen instanceof IMerchantScreen) {
-			((IMerchantScreen) screen).mouseWheelie_setRecipeId(this.index + ((IMerchantScreen) screen).getRecipeIdOffset());
-			((IMerchantScreen) screen).mouseWheelie_syncRecipeId();
-			if (screen instanceof HandledScreen) {
-				if (MWClient.WHOLE_STACK_MODIFIER.isPressed())
-					InteractionManager.pushClickEvent(((HandledScreen<?>) screen).getScreenHandler().syncId, 2, 1, SlotActionType.QUICK_MOVE);
-				else
-					InteractionManager.pushClickEvent(((HandledScreen<?>) screen).getScreenHandler().syncId, 2, 1, SlotActionType.PICKUP);
-			}
-		}
+    @Override
+    public boolean mouseClicked(int mouseButton) {
+        if (mouseButton != 1 || !MouseWheelie.CONFIG.general.enableQuickCraft()) return false;
+        MinecraftClient minecraft = MinecraftClient.getInstance();
+        Screen screen = minecraft.currentScreen;
+        if (screen instanceof IMerchantScreen) {
+            ((IMerchantScreen) screen).mouseWheelie_setRecipeId(this.index + ((IMerchantScreen) screen).getRecipeIdOffset());
+            ((IMerchantScreen) screen).mouseWheelie_syncRecipeId();
+            if (screen instanceof HandledScreen) {
+                if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) InteractionManager.pushClickEvent(((HandledScreen<?>) screen).getScreenHandler().syncId, 2, 1, SlotActionType.QUICK_MOVE);
+                else InteractionManager.pushClickEvent(((HandledScreen<?>) screen).getScreenHandler().syncId, 2, 1, SlotActionType.PICKUP);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

@@ -21,19 +21,21 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface ISlot {
-	/**
-	 * The index of the slot in its inventory.
-	 * As a container may have several inventories, multiple slots may use the same index within a container.
-	 * @return the index within the inventory
-	 * @see net.minecraft.screen.slot.Slot#index
-	 */
-	int mouseWheelie_getIndexInInv();
+    /**
+     * The index of the slot in its inventory.
+     * As a container may have several inventories, multiple slots may use the same index within a container.
+     *
+     * @return the index within the inventory
+     * @see net.minecraft.screen.slot.Slot#index
+     */
+    int mouseWheelie_getIndexInInv();
 
-	/**
-	 * The unique id of the slot within its container.
-	 * This is unique within a container, but may differ from the index in the inventory.
-	 * @return the unique id within the container
-	 * @see net.minecraft.screen.slot.Slot#id
-	 */
-	int mouseWheelie_getIdInContainer();
+    /**
+     * The unique id of the slot within its container.
+     * This is unique within a container, but may differ from the index in the inventory.
+     *
+     * @return the unique id within the container
+     * @see net.minecraft.screen.slot.Slot#id
+     */
+    int mouseWheelie_getIdInContainer();
 }

@@ -1,9 +1,6 @@
 package de.siphalor.mousewheelie;
 
-import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.client.inventory.sort.SortMode;
-import de.siphalor.mousewheelie.client.network.InteractionManager;
-import de.siphalor.mousewheelie.client.util.CreativeSearchOrder;
 import de.siphalor.mousewheelie.client.util.ItemStackUtils;
 import io.wispforest.owo.config.annotation.*;
 
@@ -55,6 +52,7 @@ public class MWConfigModel {
         public boolean scrollCreativeMenuItems = true;
         public boolean scrollCreativeMenuTabs = true;
     }
+
     @Nest
     public Sort sort = new Sort();
 

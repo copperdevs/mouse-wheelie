@@ -31,13 +31,13 @@ import java.util.List;
  */
 @Value
 public class SortContext {
-	/**
-	 * The screen that is currently sorted on.
-	 */
-	HandledScreen<?> screen;
-	/**
-	 * The slots that are the target of the current sort action.
-	 * These slots are usually in the same scope (see {@link de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper#getScope(Slot)}).
-	 */
-	List<Slot> relevantSlots;
+    /**
+     * The screen that is currently sorted on.
+     */
+    HandledScreen<?> screen;
+    /**
+     * The slots that are the target of the current sort action.
+     * These slots are usually in the same scope (see {@link de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper#getScope(Slot)}).
+     */
+    List<Slot> relevantSlots;
 }

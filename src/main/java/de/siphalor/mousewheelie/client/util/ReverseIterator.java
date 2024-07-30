@@ -22,29 +22,29 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ReverseIterator<T> implements Iterator<T> {
-	private final List<T> backingList;
-	private int index;
+    private final List<T> backingList;
+    private int index;
 
-	private ReverseIterator(List<T> backingList) {
-		this.backingList = backingList;
-		this.index = backingList.size();
-	}
+    private ReverseIterator(List<T> backingList) {
+        this.backingList = backingList;
+        this.index = backingList.size();
+    }
 
-	public static <T> ReverseIterator<T> of(List<T> backingList) {
-		return new ReverseIterator<>(backingList);
-	}
+    public static <T> ReverseIterator<T> of(List<T> backingList) {
+        return new ReverseIterator<>(backingList);
+    }
 
-	@Override
-	public boolean hasNext() {
-		return index > 0;
-	}
+    @Override
+    public boolean hasNext() {
+        return index > 0;
+    }
 
-	@Override
-	public T next() {
-		index -= 1;
-		if (index <= 0) {
-			throw new NoSuchElementException("Iterated past beginning of backing list");
-		}
-		return backingList.get(--index);
-	}
+    @Override
+    public T next() {
+        index -= 1;
+        if (index <= 0) {
+            throw new NoSuchElementException("Iterated past beginning of backing list");
+        }
+        return backingList.get(--index);
+    }
 }

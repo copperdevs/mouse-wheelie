@@ -21,5 +21,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface ISpecialClickableButtonWidget {
-	boolean mouseClicked(int mouseButton);
+    boolean mouseClicked(int mouseButton);
 }

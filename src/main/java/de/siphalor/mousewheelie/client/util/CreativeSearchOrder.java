@@ -35,65 +35,67 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CreativeSearchOrder {
-	private static FeatureSet lastFeatureSet = null;
-	private static final Object2IntMap<StackMatcher> stackToSearchPositionLookup = new Object2IntOpenHashMap<>();
-	static {
-		stackToSearchPositionLookup.defaultReturnValue(Integer.MAX_VALUE);
-	}
-	private static final ReadWriteLock stackToSearchPositionLookupLock = new ReentrantReadWriteLock();
+    private static FeatureSet lastFeatureSet = null;
+    private static final Object2IntMap<StackMatcher> stackToSearchPositionLookup = new Object2IntOpenHashMap<>();
 
-	public static Lock getReadLock() {
-		return stackToSearchPositionLookupLock.readLock();
-	}
+    static {
+        stackToSearchPositionLookup.defaultReturnValue(Integer.MAX_VALUE);
+    }
 
-	public static int getStackSearchPosition(ItemStack stack) {
-		int pos = stackToSearchPositionLookup.getInt(StackMatcher.of(stack));
-		if (pos == Integer.MAX_VALUE) {
-			pos = stackToSearchPositionLookup.getInt(StackMatcher.ignoreNbt(stack));
-		}
-		return pos;
-	}
+    private static final ReadWriteLock stackToSearchPositionLookupLock = new ReentrantReadWriteLock();
 
-	// Called on config change and when the feature set changes (on world join)
-	public static void refreshItemSearchPositionLookup() {
-		if (MouseWheelie.CONFIG.sort.optimizeCreativeSearchSort()) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			if (client.world == null) {
-				return;
-			}
-			FeatureSet enabledFeatures = client.world.getEnabledFeatures();
+    public static Lock getReadLock() {
+        return stackToSearchPositionLookupLock.readLock();
+    }
 
-			if (stackToSearchPositionLookup.isEmpty() || !Objects.equals(enabledFeatures, lastFeatureSet)) {
-				ItemGroups.updateDisplayContext(enabledFeatures, true, client.world.getRegistryManager());
-				Collection<ItemStack> displayStacks = new ArrayList<>(ItemGroups.getSearchGroup().getDisplayStacks());
-				new Thread(() -> {
-					Lock lock = stackToSearchPositionLookupLock.writeLock();
-					lock.lock();
-					stackToSearchPositionLookup.clear();
-					if (displayStacks.isEmpty()) {
-						lock.unlock();
-						return;
-					}
+    public static int getStackSearchPosition(ItemStack stack) {
+        int pos = stackToSearchPositionLookup.getInt(StackMatcher.of(stack));
+        if (pos == Integer.MAX_VALUE) {
+            pos = stackToSearchPositionLookup.getInt(StackMatcher.ignoreNbt(stack));
+        }
+        return pos;
+    }
 
-					int i = 0;
-					for (ItemStack stack : displayStacks) {
-						StackMatcher plainMatcher = StackMatcher.ignoreNbt(stack);
-						if (!stack.getComponentChanges().isEmpty() || !stackToSearchPositionLookup.containsKey(plainMatcher)) {
-							stackToSearchPositionLookup.put(plainMatcher, i);
-							i++;
-						}
-						stackToSearchPositionLookup.put(StackMatcher.of(stack), i);
-						i++;
-					}
-					lock.unlock();
-				}, "Mouse Wheelie: creative search stack position lookup builder").start();
-			}
+    // Called on config change and when the feature set changes (on world join)
+    public static void refreshItemSearchPositionLookup() {
+        if (MouseWheelie.CONFIG.sort.optimizeCreativeSearchSort()) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.world == null) {
+                return;
+            }
+            FeatureSet enabledFeatures = client.world.getEnabledFeatures();
 
-		} else {
-			Lock lock = stackToSearchPositionLookupLock.writeLock();
-			lock.lock();
-			stackToSearchPositionLookup.clear();
-			lock.unlock();
-		}
-	}
+            if (stackToSearchPositionLookup.isEmpty() || !Objects.equals(enabledFeatures, lastFeatureSet)) {
+                ItemGroups.updateDisplayContext(enabledFeatures, true, client.world.getRegistryManager());
+                Collection<ItemStack> displayStacks = new ArrayList<>(ItemGroups.getSearchGroup().getDisplayStacks());
+                new Thread(() -> {
+                    Lock lock = stackToSearchPositionLookupLock.writeLock();
+                    lock.lock();
+                    stackToSearchPositionLookup.clear();
+                    if (displayStacks.isEmpty()) {
+                        lock.unlock();
+                        return;
+                    }
+
+                    int i = 0;
+                    for (ItemStack stack : displayStacks) {
+                        StackMatcher plainMatcher = StackMatcher.ignoreNbt(stack);
+                        if (!stack.getComponentChanges().isEmpty() || !stackToSearchPositionLookup.containsKey(plainMatcher)) {
+                            stackToSearchPositionLookup.put(plainMatcher, i);
+                            i++;
+                        }
+                        stackToSearchPositionLookup.put(StackMatcher.of(stack), i);
+                        i++;
+                    }
+                    lock.unlock();
+                }, "Mouse Wheelie: creative search stack position lookup builder").start();
+            }
+
+        } else {
+            Lock lock = stackToSearchPositionLookupLock.writeLock();
+            lock.lock();
+            stackToSearchPositionLookup.clear();
+            lock.unlock();
+        }
+    }
 }

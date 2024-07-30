@@ -51,129 +51,134 @@ import java.util.List;
 @Mixin(RecipeBookWidget.class)
 public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
 
-	@Shadow @Final
-	private RecipeBookResults recipesArea;
+    @Shadow
+    @Final
+    private RecipeBookResults recipesArea;
 
-	@Shadow private int parentWidth;
+    @Shadow
+    private int parentWidth;
 
-	@Shadow private int leftOffset;
+    @Shadow
+    private int leftOffset;
 
-	@Shadow @Final private List<RecipeGroupButtonWidget> tabButtons;
+    @Shadow
+    @Final
+    private List<RecipeGroupButtonWidget> tabButtons;
 
-	@Shadow private RecipeGroupButtonWidget currentTab;
+    @Shadow
+    private RecipeGroupButtonWidget currentTab;
 
-	@Shadow protected abstract void refreshResults(boolean boolean_1);
+    @Shadow
+    protected abstract void refreshResults(boolean boolean_1);
 
-	@Shadow
-	private int parentHeight;
+    @Shadow
+    private int parentHeight;
 
-	@Shadow
-	public abstract boolean isOpen();
+    @Shadow
+    public abstract boolean isOpen();
 
-	@Shadow
-	private boolean searching;
+    @Shadow
+    private boolean searching;
 
-	@Shadow
-	protected MinecraftClient client;
+    @Shadow
+    protected MinecraftClient client;
 
-	@Shadow
-	@Final
-	private RecipeMatcher recipeFinder;
+    @Shadow
+    @Final
+    private RecipeMatcher recipeFinder;
 
-	@Shadow
-	protected AbstractRecipeScreenHandler<?,?> craftingScreenHandler;
+    @Shadow
+    protected AbstractRecipeScreenHandler<?, ?> craftingScreenHandler;
 
-	@Override
-	public ScrollAction mouseWheelie_scrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
-		if (!this.isOpen())
-			return ScrollAction.PASS;
-		int top = (this.parentHeight - 166) / 2;
-		if (mouseY < top || mouseY >= top + 166)
-			return ScrollAction.PASS;
-		int left = (this.parentWidth - 147) / 2 - this.leftOffset;
-		if (mouseX >= left && mouseX < left + 147) {
-			// Ugly approach since assigning the casted value causes a runtime mixin error
-			int maxPage = ((IRecipeBookResults) recipesArea).mouseWheelie_getPageCount() - 1;
-			((IRecipeBookResults) recipesArea).mouseWheelie_setCurrentPage(MathHelper.clamp((int) (((IRecipeBookResults) recipesArea).mouseWheelie_getCurrentPage() + Math.round(scrollAmount)), 0, Math.max(maxPage, 0)));
-			((IRecipeBookResults) recipesArea).mouseWheelie_refreshResultButtons();
-			return ScrollAction.SUCCESS;
-		} else if(mouseX >= left - 30 && mouseX < left) {
-			int index = tabButtons.indexOf(currentTab);
-			int newIndex = MathHelper.clamp(index + (int) (Math.round(scrollAmount)), 0, tabButtons.size() - 1);
-			if (newIndex != index) {
-				currentTab.setToggled(false);
-				currentTab = tabButtons.get(newIndex);
-				currentTab.setToggled(true);
-				refreshResults(true);
-			}
-			return ScrollAction.SUCCESS;
-		}
-		return ScrollAction.PASS;
-	}
+    @Override
+    public ScrollAction mouseWheelie_scrollRecipeBook(double mouseX, double mouseY, double scrollAmount) {
+        if (!this.isOpen()) return ScrollAction.PASS;
+        int top = (this.parentHeight - 166) / 2;
+        if (mouseY < top || mouseY >= top + 166) return ScrollAction.PASS;
+        int left = (this.parentWidth - 147) / 2 - this.leftOffset;
+        if (mouseX >= left && mouseX < left + 147) {
+            // Ugly approach since assigning the casted value causes a runtime mixin error
+            int maxPage = ((IRecipeBookResults) recipesArea).mouseWheelie_getPageCount() - 1;
+            ((IRecipeBookResults) recipesArea).mouseWheelie_setCurrentPage(MathHelper.clamp((int) (((IRecipeBookResults) recipesArea).mouseWheelie_getCurrentPage() + Math.round(scrollAmount)), 0, Math.max(maxPage, 0)));
+            ((IRecipeBookResults) recipesArea).mouseWheelie_refreshResultButtons();
+            return ScrollAction.SUCCESS;
+        } else if (mouseX >= left - 30 && mouseX < left) {
+            int index = tabButtons.indexOf(currentTab);
+            int newIndex = MathHelper.clamp(index + (int) (Math.round(scrollAmount)), 0, tabButtons.size() - 1);
+            if (newIndex != index) {
+                currentTab.setToggled(false);
+                currentTab = tabButtons.get(newIndex);
+                currentTab.setToggled(true);
+                refreshResults(true);
+            }
+            return ScrollAction.SUCCESS;
+        }
+        return ScrollAction.PASS;
+    }
 
-	@Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickRecipe(ILnet/minecraft/recipe/RecipeEntry;Z)V", shift = At.Shift.AFTER))
-	public void mouseClicked(double x, double y, int mouseButton, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		if (MouseWheelie.CONFIG.general.enableQuickCraft() & mouseButton == 1) {
-			int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
-			RecipeEntry<?> recipe = recipesArea.getLastClickedRecipe();
-			if (canCraftMore(recipe)) {
-				InteractionManager.clear();
-				InteractionManager.setWaiter((InteractionManager.TriggerType triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount());
-			}
-			InteractionManager.pushClickEvent(craftingScreenHandler.syncId, resSlot, 0, MWClient.WHOLE_STACK_MODIFIER.isPressed() ? SlotActionType.QUICK_MOVE : SlotActionType.PICKUP);
-		}
-	}
+    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickRecipe(ILnet/minecraft/recipe/RecipeEntry;Z)V", shift = At.Shift.AFTER))
+    public void mouseClicked(double x, double y, int mouseButton, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        if (MouseWheelie.CONFIG.general.enableQuickCraft() & mouseButton == 1) {
+            int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
+            RecipeEntry<?> recipe = recipesArea.getLastClickedRecipe();
+            if (canCraftMore(recipe)) {
+                InteractionManager.clear();
+                InteractionManager.setWaiter((InteractionManager.TriggerType triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount());
+            }
+            InteractionManager.pushClickEvent(craftingScreenHandler.syncId, resSlot, 0, MWClient.WHOLE_STACK_MODIFIER.isPressed() ? SlotActionType.QUICK_MOVE : SlotActionType.PICKUP);
+        }
+    }
 
-	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-	public void keyPressed(int int1, int int2, int int3, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-		if (MouseWheelie.CONFIG.general.enableQuickCraft() && isOpen() && !client.player.isSpectator()) {
-			if (MinecraftClient.getInstance().options.dropKey.matchesKey(int1, int2)) {
-				searching = false;
-				RecipeEntry<?> oldRecipeEntry = recipesArea.getLastClickedRecipe();
-				if (this.recipesArea.mouseClicked(MWClient.getMouseX(), MWClient.getMouseY(), 0, (this.parentWidth - 147) / 2 - this.leftOffset, (this.parentHeight - 166) / 2, 147, 166)) {
-					RecipeEntry<?> recipeEntry = recipesArea.getLastClickedRecipe();
-					RecipeResultCollection resultCollection = recipesArea.getLastClickedResults();
-					if (!resultCollection.isCraftable(recipeEntry)) {
-						return;
-					}
-					int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
-					if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
-						if (oldRecipeEntry != recipeEntry || craftingScreenHandler.slots.get(resSlot).getStack().isEmpty() || canCraftMore(recipeEntry)) {
-							InteractionManager.push(new InteractionManager.PacketEvent(new CraftRequestC2SPacket(craftingScreenHandler.syncId, recipeEntry, true), (triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount()));
-						}
-						int cnt = recipeFinder.countCrafts(recipeEntry, recipeEntry.value().getResult(client.world.getRegistryManager()).getMaxCount(), null);
-						for (int i = 1; i < cnt; i++) {
-							InteractionManager.pushClickEvent(craftingScreenHandler.syncId, resSlot, 1, SlotActionType.THROW);
-						}
-					} else {
-						if (oldRecipeEntry != recipeEntry || craftingScreenHandler.slots.get(resSlot).getStack().isEmpty()) {
-							InteractionManager.push(new InteractionManager.PacketEvent(new CraftRequestC2SPacket(craftingScreenHandler.syncId, recipeEntry, false), (triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount()));
-						}
-					}
-					InteractionManager.push(new InteractionManager.CallbackEvent(() -> {
-						client.interactionManager.clickSlot(craftingScreenHandler.syncId, craftingScreenHandler.getCraftingResultSlotIndex(), 0, SlotActionType.THROW, client.player);
-						refreshResults(false);
-						return InteractionManager.TICK_WAITER;
-					}, true));
-					callbackInfoReturnable.setReturnValue(true);
-				}
-			}
-		}
-	}
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    public void keyPressed(int int1, int int2, int int3, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+        if (MouseWheelie.CONFIG.general.enableQuickCraft() && isOpen() && !client.player.isSpectator()) {
+            if (MinecraftClient.getInstance().options.dropKey.matchesKey(int1, int2)) {
+                searching = false;
+                RecipeEntry<?> oldRecipeEntry = recipesArea.getLastClickedRecipe();
+                if (this.recipesArea.mouseClicked(MWClient.getMouseX(), MWClient.getMouseY(), 0, (this.parentWidth - 147) / 2 - this.leftOffset, (this.parentHeight - 166) / 2, 147, 166)) {
+                    RecipeEntry<?> recipeEntry = recipesArea.getLastClickedRecipe();
+                    RecipeResultCollection resultCollection = recipesArea.getLastClickedResults();
+                    if (!resultCollection.isCraftable(recipeEntry)) {
+                        return;
+                    }
+                    int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
+                    if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
+                        if (oldRecipeEntry != recipeEntry || craftingScreenHandler.slots.get(resSlot).getStack().isEmpty() || canCraftMore(recipeEntry)) {
+                            InteractionManager.push(new InteractionManager.PacketEvent(new CraftRequestC2SPacket(craftingScreenHandler.syncId, recipeEntry, true), (triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount()));
+                        }
+                        int cnt = recipeFinder.countCrafts(recipeEntry, recipeEntry.value().getResult(client.world.getRegistryManager()).getMaxCount(), null);
+                        for (int i = 1; i < cnt; i++) {
+                            InteractionManager.pushClickEvent(craftingScreenHandler.syncId, resSlot, 1, SlotActionType.THROW);
+                        }
+                    } else {
+                        if (oldRecipeEntry != recipeEntry || craftingScreenHandler.slots.get(resSlot).getStack().isEmpty()) {
+                            InteractionManager.push(new InteractionManager.PacketEvent(new CraftRequestC2SPacket(craftingScreenHandler.syncId, recipeEntry, false), (triggerType) -> MWClient.lastUpdatedSlot >= craftingScreenHandler.getCraftingSlotCount()));
+                        }
+                    }
+                    InteractionManager.push(new InteractionManager.CallbackEvent(() -> {
+                        client.interactionManager.clickSlot(craftingScreenHandler.syncId, craftingScreenHandler.getCraftingResultSlotIndex(), 0, SlotActionType.THROW, client.player);
+                        refreshResults(false);
+                        return InteractionManager.TICK_WAITER;
+                    }, true));
+                    callbackInfoReturnable.setReturnValue(true);
+                }
+            }
+        }
+    }
 
-	@Unique
-	private boolean canCraftMore(RecipeEntry<?> recipeEntry) {
-		return getBiggestCraftingStackSize() < recipeFinder.countCrafts(recipeEntry, recipeEntry.value().getResult(client.world.getRegistryManager()).getMaxCount(), null);
-	}
+    @Unique
+    private boolean canCraftMore(RecipeEntry<?> recipeEntry) {
+        return getBiggestCraftingStackSize() < recipeFinder.countCrafts(recipeEntry, recipeEntry.value().getResult(client.world.getRegistryManager()).getMaxCount(), null);
+    }
 
-	@Unique
-	private int getBiggestCraftingStackSize() {
-		int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
-		int cnt = 0;
-		for (int i = 0; i < craftingScreenHandler.getCraftingSlotCount(); i++) {
-			if (i == resSlot) continue;
-			cnt = Math.max(cnt, craftingScreenHandler.slots.get(i).getStack().getCount());
-		}
-		return cnt;
-	}
+    @Unique
+    private int getBiggestCraftingStackSize() {
+        int resSlot = craftingScreenHandler.getCraftingResultSlotIndex();
+        int cnt = 0;
+        for (int i = 0; i < craftingScreenHandler.getCraftingSlotCount(); i++) {
+            if (i == resSlot) continue;
+            cnt = Math.max(cnt, craftingScreenHandler.slots.get(i).getStack().getCount());
+        }
+        return cnt;
+    }
 }
