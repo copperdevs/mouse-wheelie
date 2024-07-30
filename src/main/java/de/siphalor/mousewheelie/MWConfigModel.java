@@ -59,9 +59,9 @@ public class MWConfigModel {
     public Sort sort = new Sort();
 
     public static class Sort {
-        public SortMode primarySort = SortMode.CREATIVE;
-        public SortMode shiftSort = SortMode.QUANTITY;
-        public SortMode controlSort = SortMode.ALPHABET;
+        public SortMode.SortModeType primarySort = SortMode.SortModeType.CREATIVE;
+        public SortMode.SortModeType shiftSort = SortMode.SortModeType.QUANTITY;
+        public SortMode.SortModeType controlSort = SortMode.SortModeType.ALPHABET;
         public boolean serverAcceleratedSorting = true;
 
         @Hook

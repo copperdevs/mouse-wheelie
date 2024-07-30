@@ -13,7 +13,7 @@
     "mousewheelie.sortmode.none": "No ordenar",
     "tweed4_tailor_screen.screen.mousewheelie": "Configuración de Mouse Wheelie",
     "tweed4_tailor_screen.screen.mousewheelie.general": "General",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "Índice de interaccion",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "Índice de interaccion",
     "tweed4_tailor_screen.screen.mousewheelie.general.enable-quick-craft": "Habilitar crafteo rapido",
     "tweed4_tailor_screen.screen.mousewheelie.general.hotbar-scoping": "Tratar la barra separadamente",
     "tweed4_tailor_screen.screen.mousewheelie.scrolling": "Desplazamiento",

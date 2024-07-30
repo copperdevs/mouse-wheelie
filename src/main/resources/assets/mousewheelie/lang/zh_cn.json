@@ -83,7 +83,7 @@
     "tweed4_tailor_screen.screen.mousewheelie.scrolling.description": "借助这一功能，当鼠标悬停在一组物品上时，滚动可以轻松地将单个物品移入或移出你的物品栏。\n与修饰键（例如Shift和Control，在“控制设置”中可更改）结合使用，您可以滚动整组、所有同类物品，甚至物品栏中的所有物品。",
     "tweed4_tailor_screen.screen.mousewheelie.general.enable-drop-modifier": "使用Alt+单击扔出",
     "tweed4_tailor_screen.screen.mousewheelie.general.enable-drop-modifier.description": "按住扔出键（默认为 Alt 键）并单击它们时扔掉物品。\n可以在原版控制菜单中更改扔出键。",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "交互速度",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "交互速度",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate": "单人游戏互动速度",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate.description": "设置单人游戏和本地多人游戏的时间间隔（以毫秒为单位）。",
     "tweed4_tailor_screen.screen.mousewheelie.general.item-kinds-nbt-match-mode": "通过NBT标签匹配物品种类",

@@ -29,7 +29,7 @@
     "tweed4_tailor_screen.screen.mousewheelie.refill.restore-selected-slot": "Palauta valittu pikanäppäin",
     "tweed4_tailor_screen.screen.mousewheelie.refill.restore-selected-slot.description": "Palauta uudelleen täytetty esine alun perin valittuun pikanäppäimeen.\nTämä vie hieman enemmän aikaa. Tämä kannattaa ehkä kytkeä pois päältä, jos yhteys on hidas.",
     "tweed4_tailor_screen.screen.mousewheelie.refill.item-changes": "Täytä, kun nykyinen esine muuttuu",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "Käsittely nopeus",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "Käsittely nopeus",
     "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate.description": "Asettaa millisekunneissa aikavälin että kuinka usein käsittelyt lähetetään palvelimelle.\nPienemmät luvut lisäävät nopeutta, mutta palvelimet saattavat hylätä ne.",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate": "Yksinpelin Käsittelynopeus",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate.description": "Asettaa millisekunneissa aikavälin yksinpelissä ja paikallisessa moninpelissä.",

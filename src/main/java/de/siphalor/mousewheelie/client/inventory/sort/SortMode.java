@@ -42,6 +42,19 @@ public abstract class SortMode {
     public static final SortMode QUANTITY;
     public static final SortMode RAW_ID;
 
+    public enum SortModeType {
+        NONE(SortMode.NONE), ALPHABET(SortMode.ALPHABET), CREATIVE(SortMode.CREATIVE), QUANTITY(SortMode.QUANTITY), RAW_ID(SortMode.RAW_ID);
+
+        private SortMode mode;
+
+        public SortMode getMode() {
+            return mode;
+        }
+
+        SortModeType(SortMode none) {
+        }
+    }
+
     public static <T extends SortMode> T register(String name, T sortMode) {
         SORT_MODES.put(name, sortMode);
         return sortMode;

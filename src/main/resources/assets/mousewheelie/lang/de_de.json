@@ -69,7 +69,7 @@
     "tweed4_tailor_screen.screen.mousewheelie.tool-picking.hold-block.description": "Beim Drücken der mittleren Maustaste das optimale Werkzeug für den anvisierten Block wählen, wenn der Spieler den anvisierten Block als Gegenstand in der Hand hält.",
     "tweed4_tailor_screen.screen.mousewheelie.tool-picking.pick-from-inventory": "Aus dem Inventar wählen",
     "tweed4_tailor_screen.screen.mousewheelie.tool-picking.pick-from-inventory.description": "Bei der Suche nach passenden Werkzeugen das gesamte Inventar verwenden,\nstatt nur der Hotbar.",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "Interaktionsrate",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "Interaktionsrate",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate": "Interaktionsrate im Einzelspieler",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate.description": "Setzt das Interaktionsintervall in Millisekunden für den Einzelspieler- und den lokalen Mehrspielermodus.",
     "tweed4_tailor_screen.screen.mousewheelie.general.enable-quick-armor-swapping": "Schneller Rüstungswechsel",

@@ -26,7 +26,7 @@
     "tweed4_tailor_screen.screen.mousewheelie.refill.off-hand.description": "Preenche pilhas na segunda mão.",
     "tweed4_tailor_screen.screen.mousewheelie.refill.restore-selected-slot.description": "Restaura o item preenchido para o espaço selecionado originalmente.\nIsso vai demorar um pouco mais. Você pode querer desligar isso em conexões lentas.",
     "tweed4_tailor_screen.screen.mousewheelie.refill.other.description": "Preenche em outras ocasiões.",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "Velocidade de Interação",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "Velocidade de Interação",
     "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate.description": "Define o intervalo em milissegundos na qual interações serão enviadas ao servidor.\nNúmeros menores aumentam a velocidade mas podem ser rejeitados por servidores.",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate": "Velocidade de Interação em Um Jogador",
     "tweed4_tailor_screen.screen.mousewheelie.general.integrated-interaction-rate.description": "Define o intervalo em milissegundos para um jogador ou múltiplos jogadores locais.",

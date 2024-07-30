@@ -46,7 +46,7 @@
     "tweed4_tailor_screen.screen.mousewheelie.scrolling.invert.description": "Inversez le sens de défilement lors du défilement des items.",
     "tweed4_tailor_screen.screen.mousewheelie": "Config De Mouse Wheelie",
     "tweed4_tailor_screen.screen.mousewheelie.general": "Général",
-    "tweed4_tailor_screen.screen.mousewheelie.general.interaction-rate": "Vitesse D'Interaction",
+    "text.config.mouse-wheelie-config.option.general.interactionRate": "Vitesse D'Interaction",
     "tweed4_tailor_screen.screen.mousewheelie.scrolling.directional-scrolling.description": "Si activé, les éléments seront déplacés selon que vous faites défiler vers le haut ou vers le bas.\nSi désactivé, vous ferez défiler pour modifier le nombre d'éléments présents (vers le haut augmentera - vers le bas diminuera).",
     "tweed4_tailor_screen.screen.mousewheelie.scrolling.scroll-creative-menu-items": "Faites défiler les éléments du menu créatif",
     "tweed4_tailor_screen.screen.mousewheelie.scrolling.scroll-creative-menu-items.description": "Définit s'il faut par défaut faire défiler les éléments hors du menu créatif.",
