@@ -134,13 +134,13 @@ public class ItemStackUtils {
 
     private static boolean areTagsEqualExceptOneSided(ComponentMap compA, ComponentMap compB, Set<String> checkedComponentTypes) {
         for (Component comp : compA) {
-            if (checkedComponentTypes.contains(comp.comp_2443().toString())) {
+            if (checkedComponentTypes.contains(comp.type().toString())) {
                 continue;
             }
-            if (!compB.contains(comp.comp_2443())) {
+            if (!compB.contains(comp.type())) {
                 return false;
             }
-            checkedComponentTypes.add(comp.comp_2443().toString());
+            checkedComponentTypes.add(comp.type().toString());
         }
         return true;
     }
@@ -182,8 +182,8 @@ public class ItemStackUtils {
                 }
 
                 for (Component component : componentMap) {
-                    if (!(component.comp_2443().equals(DataComponentTypes.DAMAGE) || component.comp_2443().equals(DataComponentTypes.ENCHANTMENTS))) {
-                        hashCodeBuilder.append(component.comp_2443().toString()).append(component.comp_2444().toString());
+                    if (!(component.type().equals(DataComponentTypes.DAMAGE) || component.type().equals(DataComponentTypes.ENCHANTMENTS))) {
+                        hashCodeBuilder.append(component.type().toString()).append(component.value().toString());
                     }
                 }
         }

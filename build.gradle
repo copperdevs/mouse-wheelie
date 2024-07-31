@@ -2,6 +2,8 @@ plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.6.1'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
 }
 
 
@@ -16,12 +18,9 @@ repositories {
     }
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
-    maven {
-        name "Siphalor's Maven"
-        url "https://maven.siphalor.de/"
-    }
     maven { url "https://jitpack.io" }
     maven { url 'https://maven.wispforest.io' }
+    mavenCentral()
 }
 
 dependencies {
@@ -38,13 +37,12 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation(include("de.siphalor:amecsapi-${project.amecs_version}")) {
-        exclude group: "net.fabricmc.fabric-api"
-    }
-
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
     annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
     include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+    implementation project(':too-many-shortcuts')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 // Workaround for https://github.com/gradle/gradle/issues/10195
@@ -95,8 +93,6 @@ tasks.register('sourcesJar', Jar) {
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
@@ -113,4 +109,7 @@ publishing {
             java.withSourcesJar()
         }
     }
+}
+kotlin {
+    jvmToolchain(21)
 }

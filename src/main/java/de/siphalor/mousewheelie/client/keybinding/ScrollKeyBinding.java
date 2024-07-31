@@ -30,7 +30,7 @@ public class ScrollKeyBinding extends AmecsKeyBinding implements PriorityKeyBind
     private final boolean scrollDown;
 
     public ScrollKeyBinding(Identifier id, String category, boolean scrollDown) {
-        super(id, InputUtil.Type.MOUSE, scrollDown ? KeyBindingUtils.MOUSE_SCROLL_DOWN : KeyBindingUtils.MOUSE_SCROLL_UP, category, new KeyModifiers());
+        super(id, InputUtil.Type.MOUSE, scrollDown ? 512 : 513, category, new KeyModifiers());
         this.scrollDown = scrollDown;
     }
 

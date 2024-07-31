@@ -7,3 +7,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+include 'too-many-shortcuts'
+project(':too-many-shortcuts').projectDir = new File(settingsDir, 'too-many-shortcuts')
