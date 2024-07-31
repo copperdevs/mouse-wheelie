@@ -9,13 +9,14 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+
 base {
     archivesName = project.archives_base_name
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
 
     maven {
         name "Fabric"
@@ -41,9 +42,9 @@ dependencies {
     annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
     include "io.wispforest:owo-sentinel:${project.owo_version}"
 
-    implementation project(':too-many-shortcuts')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+    include(modImplementation(project(':too-many-shortcuts')))
 }
 
 license {
@@ -103,4 +104,8 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+allprojects {
+    apply plugin: 'java'
 }

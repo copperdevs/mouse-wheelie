@@ -288,11 +288,11 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
         InventorySorter sorter = new InventorySorter(screenHelper.get(), (HandledScreen<?>) (Object) this, focusedSlot);
         SortMode sortMode;
         if (hasShiftDown()) {
-            sortMode = MouseWheelie.CONFIG.sort.shiftSort().getMode();
+            sortMode = MouseWheelie.CONFIG.sort.shiftSort().getSortMode();
         } else if (hasControlDown()) {
-            sortMode = MouseWheelie.CONFIG.sort.controlSort().getMode();
+            sortMode = MouseWheelie.CONFIG.sort.controlSort().getSortMode();
         } else {
-            sortMode = MouseWheelie.CONFIG.sort.primarySort().getMode();
+            sortMode = MouseWheelie.CONFIG.sort.primarySort().getSortMode();
         }
         if (sortMode == null) return false;
         sorter.sort(sortMode);
