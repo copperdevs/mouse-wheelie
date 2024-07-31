@@ -17,24 +17,44 @@
 
 package de.siphalor.mousewheelie.client.keybinding;
 
-import de.siphalor.amecs.api.AmecsKeyBinding;
-import de.siphalor.amecs.api.KeyModifiers;
-import de.siphalor.amecs.api.PriorityKeyBinding;
+import de.siphalor.mousewheelie.Logger;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
+import dev.kingtux.tms.api.PriorityKeyBinding;
+import dev.kingtux.tms.api.TMSKeyBinding;
+import dev.kingtux.tms.api.modifiers.BindingModifiers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 
-public class SortKeyBinding extends AmecsKeyBinding implements PriorityKeyBinding {
-    public SortKeyBinding(Identifier id, InputUtil.Type type, int code, String category, KeyModifiers defaultModifiers) {
+public class SortKeyBinding extends TMSKeyBinding implements PriorityKeyBinding {
+    public SortKeyBinding(Identifier id, InputUtil.Type type, int code, String category, BindingModifiers defaultModifiers) {
         super(id, type, code, category, defaultModifiers);
+    }
+
+    @Override
+    public void onPressed() {
+        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+
+        Logger.info("sort key pressed current screen {}", currentScreen);
     }
 
     @Override
     public boolean onPressedPriority() {
         Screen currentScreen = MinecraftClient.getInstance().currentScreen;
-        if (currentScreen instanceof IContainerScreen) return ((IContainerScreen) currentScreen).mouseWheelie_triggerSort();
+
+        Logger.info("sort key pressed priority current screen {}", currentScreen);
+
+        if (currentScreen instanceof IContainerScreen)
+            return ((IContainerScreen) currentScreen).mouseWheelie_triggerSort();
+        return false;
+    }
+
+    @Override
+    public boolean onReleasedPriority() {
+        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+
+        Logger.info("sort key released priority current screen {}", currentScreen);
         return false;
     }
 }

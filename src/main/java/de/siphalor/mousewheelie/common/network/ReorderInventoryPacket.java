@@ -17,7 +17,7 @@
 
 package de.siphalor.mousewheelie.common.network;
 
-import de.siphalor.mousewheelie.MouseWheelie;
+import de.siphalor.mousewheelie.Logger;
 import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class ReorderInventoryPacket {
         int[] reorderedIndices = buf.readIntArray();
 
         if (reorderedIndices.length % 2 != 0) {
-            MouseWheelie.logWarn("Received reorder inventory packet with invalid data!");
+            Logger.warn("Received reorder inventory packet with invalid data!");
             return null;
         }
 

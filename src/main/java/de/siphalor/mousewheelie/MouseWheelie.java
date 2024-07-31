@@ -17,14 +17,11 @@
 
 package de.siphalor.mousewheelie;
 
-import de.siphalor.mousewheelie.client.MWClient;
-import de.siphalor.mousewheelie.client.network.InteractionManager;
-import de.siphalor.mousewheelie.client.util.CreativeSearchOrder;
 import de.siphalor.mousewheelie.common.network.MWLogicalServerNetworking;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
@@ -37,21 +34,16 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import de.siphalor.mousewheelie.MWConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MouseWheelie implements ModInitializer {
     public static final String MOD_ID = "mousewheelie";
     public static final String MOD_NAME = "Mouse Wheelie";
 
-    public static MWConfig CONFIG = MWConfig.createAndLoad();
+    private static final MWConfigHandler CONFIG_HANDLER = new MWConfigHandler();
 
     public static Identifier id(String id) {
         return Identifier.of(MOD_ID, id);
     }
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
     public void onInitialize() {
@@ -59,31 +51,13 @@ public class MouseWheelie implements ModInitializer {
 
         MWLogicalServerNetworking.setup();
 
-        CONFIG.general.subscribeToInteractionRate(this::onReloadInteractionRate);
-        CONFIG.general.subscribeToIntegratedInteractionRate(this::onReloadIntegratedInteractionRate);
-        CONFIG.sort.subscribeToOptimizeCreativeSearchSort(this::onReloadOptimizeCreativeSearchSort);
-
+        CONFIG_HANDLER.load();
     }
 
-    private void onReloadInteractionRate(int value) {
-        if (!MWClient.isOnLocalServer()) {
-            InteractionManager.setTickRate(CONFIG.general.interactionRate());
-        }
-    }
-
-    private void onReloadIntegratedInteractionRate(int value) {
-        if (!MWClient.isOnLocalServer()) {
-            InteractionManager.setTickRate(CONFIG.general.integratedInteractionRate());
-        }
-    }
-
-    private void onReloadOptimizeCreativeSearchSort(boolean value) {
-        CreativeSearchOrder.refreshItemSearchPositionLookup();
-    }
 
     private TypedActionResult<ItemStack> onPlayerUseItem(PlayerEntity player, World world, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (CONFIG.general.enableQuickArmorSwapping() && !world.isClient()) {
+        if (MWConfigHandler.getConfig().general.enableQuickArmorSwapping() && !world.isClient()) {
             EquipmentSlot equipmentSlot = MouseWheelie.getPlayerPreferredEquipmentSlot(stack);
             if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 ItemStack equipmentStack = player.getEquippedStack(equipmentSlot);
@@ -116,21 +90,5 @@ public class MouseWheelie implements ModInitializer {
         }
 
         return level;
-    }
-
-    public static void logInfo(String message) {
-        LOGGER.info(message);
-    }
-
-    public static void logWarn(String message) {
-        LOGGER.warn(message);
-    }
-
-    public static void logWarn(String message, Object... arg) {
-        LOGGER.warn(message, arg);
-    }
-
-    public static void logError(String message) {
-        LOGGER.error(message);
     }
 }

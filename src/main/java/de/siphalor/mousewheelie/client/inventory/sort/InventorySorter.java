@@ -17,12 +17,12 @@
 
 package de.siphalor.mousewheelie.client.inventory.sort;
 
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.network.MWClientNetworking;
 import de.siphalor.mousewheelie.client.util.ItemStackUtils;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import de.siphalor.mousewheelie.network.ReorderInventoryPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -121,7 +121,7 @@ public class InventorySorter {
 
         sortIds = sortMode.sort(sortIds, stacks, new SortContext(containerScreen, Arrays.asList(inventorySlots)));
 
-        if (MouseWheelie.CONFIG.sort.serverAcceleratedSorting() && MWClientNetworking.canSendReorderPacket()) {
+        if (MWConfigHandler.getConfig().sort.serverAcceleratedSorting() && MWClientNetworking.canSendReorderPacket()) {
             this.reorderInventory(sortIds);
         } else {
             this.sortOnClient(sortIds);

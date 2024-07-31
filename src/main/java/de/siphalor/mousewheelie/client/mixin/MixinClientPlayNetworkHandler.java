@@ -17,12 +17,11 @@
 
 package de.siphalor.mousewheelie.client.mixin;
 
-import de.siphalor.mousewheelie.MWConfig;
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.client.inventory.SlotRefiller;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.network.MWClientNetworking;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,12 +45,6 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
         super(client, connection, connectionState);
     }
 
-
-	/*@Inject(method = "onConfirmScreenAction", at = @At("RETURN"))
-	public void onGuiActionConfirmed(ConfirmScreenActionS2CPacket packet, CallbackInfo callbackInfo) {
-		InteractionManager.triggerSend(InteractionManager.TriggerType.GUI_CONFIRM);
-	}*/
-
     @Inject(method = "onUpdateSelectedSlot", at = @At("HEAD"))
     public void onHeldItemChangeBegin(UpdateSelectedSlotS2CPacket packet, CallbackInfo callbackInfo) {
         InteractionManager.triggerSend(InteractionManager.TriggerType.HELD_ITEM_CHANGE);
@@ -65,7 +58,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/PlayerScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V", shift = At.Shift.BEFORE))
     public void onGuiSlotUpdateHotbar(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo callbackInfo) {
-        if (MouseWheelie.CONFIG.refill.enable() && MouseWheelie.CONFIG.refill.other()) {
+        if (MWConfigHandler.getConfig().refill.enable() && MWConfigHandler.getConfig().refill.other()) {
             //noinspection ConstantConditions
             PlayerInventory inventory = client.player.getInventory();
             if (packet.getSlot() - 36 == inventory.selectedSlot) { // MAIN_HAND
@@ -77,7 +70,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V", shift = At.Shift.BEFORE))
     public void onGuiSlotUpdateOther(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo callbackInfo) {
         //noinspection ConstantConditions
-        if (MouseWheelie.CONFIG.refill.enable() && MouseWheelie.CONFIG.refill.other() && client.player.currentScreenHandler == client.player.playerScreenHandler && packet.getSlot() == 45) {
+        if (MWConfigHandler.getConfig().refill.enable() && MWConfigHandler.getConfig().refill.other() && client.player.currentScreenHandler == client.player.playerScreenHandler && packet.getSlot() == 45) {
             PlayerInventory inventory = client.player.getInventory();
             if (packet.getSlot() == 45) { // OFF_HAND
                 SlotRefiller.scheduleRefillChecked(Hand.OFF_HAND, inventory, inventory.offHand.get(0), packet.getStack());

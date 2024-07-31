@@ -1,5 +1,6 @@
 package de.siphalor.mousewheelie.network;
 
+import de.siphalor.mousewheelie.Logger;
 import de.siphalor.mousewheelie.MouseWheelie;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -27,7 +28,7 @@ public record ReorderInventoryPayload(int syncId, int[] slotMappings) implements
         int[] reorderedIndices = buf.readIntArray();
 
         if (reorderedIndices.length % 2 != 0) {
-            MouseWheelie.logWarn("Received reorder inventory packet with invalid data!");
+            Logger.warn("Received reorder inventory packet with invalid data!");
             return null;
         }
 

@@ -18,7 +18,6 @@
 package de.siphalor.mousewheelie.client;
 
 import de.siphalor.amecs.api.KeyModifiers;
-import de.siphalor.mousewheelie.MWConfig;
 import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.ToolPicker;
 import de.siphalor.mousewheelie.client.keybinding.*;
@@ -27,6 +26,8 @@ import de.siphalor.mousewheelie.client.util.ScrollAction;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
 import de.siphalor.mousewheelie.client.util.inject.IScrollableRecipeBook;
 import de.siphalor.mousewheelie.client.util.inject.ISpecialScrollableScreen;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
+import dev.kingtux.tms.api.modifiers.BindingModifiers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,7 +39,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.*;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
@@ -50,7 +50,7 @@ public class MWClient implements ClientModInitializer {
 
     public static final String KEY_BINDING_CATEGORY = "key.categories." + MouseWheelie.MOD_ID;
 
-    public static final KeyBinding SORT_KEY_BINDING = new SortKeyBinding(MouseWheelie.id("sort_inventory"), InputUtil.Type.MOUSE, 2, KEY_BINDING_CATEGORY, new KeyModifiers());
+    public static final KeyBinding SORT_KEY_BINDING = new SortKeyBinding(MouseWheelie.id("sort_inventory"), InputUtil.Type.MOUSE, 2, KEY_BINDING_CATEGORY, new BindingModifiers());
     public static final KeyBinding SCROLL_UP_KEY_BINDING = new ScrollKeyBinding(MouseWheelie.id("scroll_up"), KEY_BINDING_CATEGORY, false);
     public static final KeyBinding SCROLL_DOWN_KEY_BINDING = new ScrollKeyBinding(MouseWheelie.id("scroll_down"), KEY_BINDING_CATEGORY, true);
     public static final KeyBinding PICK_TOOL_KEY_BINDING = new PickToolKeyBinding(MouseWheelie.id("pick_tool"), InputUtil.Type.KEYSYM, -1, KEY_BINDING_CATEGORY, new KeyModifiers());
@@ -78,7 +78,7 @@ public class MWClient implements ClientModInitializer {
         ClientPickBlockGatherCallback.EVENT.register((player, result) -> {
             Item item = player.getMainHandStack().getItem();
             int index = -1;
-            if (MouseWheelie.CONFIG.toolPicking.holdTool() && (isTool(item) || isWeapon(item))) {
+            if (MWConfigHandler.getConfig().toolPicking.holdTool() && (isTool(item) || isWeapon(item))) {
                 ToolPicker toolPicker = new ToolPicker(player.getInventory());
                 if (result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
                     index = toolPicker.findToolFor(player.getWorld().getBlockState(((BlockHitResult) result).getBlockPos()));
@@ -86,7 +86,7 @@ public class MWClient implements ClientModInitializer {
                     index = toolPicker.findWeapon();
                 }
             }
-            if (MouseWheelie.CONFIG.toolPicking.holdBlock() && item instanceof BlockItem && result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
+            if (MWConfigHandler.getConfig().toolPicking.holdBlock() && item instanceof BlockItem && result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult) {
                 BlockState blockState = player.getWorld().getBlockState(((BlockHitResult) result).getBlockPos());
                 if (blockState.getBlock() == ((BlockItem) item).getBlock()) {
                     ToolPicker toolPicker = new ToolPicker(player.getInventory());

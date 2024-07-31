@@ -17,8 +17,6 @@
 
 package de.siphalor.mousewheelie.client.mixin.gui.screen;
 
-import de.siphalor.mousewheelie.MWConfig;
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.compat.FabricCreativeGuiHelper;
 import de.siphalor.mousewheelie.client.inventory.ContainerScreenHelper;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
@@ -26,6 +24,7 @@ import de.siphalor.mousewheelie.client.util.ScrollAction;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
 import de.siphalor.mousewheelie.client.util.inject.ISpecialScrollableScreen;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -62,7 +61,7 @@ public abstract class MixinCreativeInventoryScreen extends AbstractInventoryScre
 
     @Override
     public ScrollAction mouseWheelie_onMouseScrolledSpecial(double mouseX, double mouseY, double scrollAmount) {
-        if (MouseWheelie.CONFIG.scrolling.scrollCreativeMenuTabs()) {
+        if (MWConfigHandler.getConfig().scrolling.scrollCreativeMenuTabs()) {
             double relMouseY = mouseY - this.y;
             double relMouseX = mouseX - this.x;
             boolean yOverTopTabs = (-32 <= relMouseY && relMouseY <= 0);
@@ -89,8 +88,8 @@ public abstract class MixinCreativeInventoryScreen extends AbstractInventoryScre
             }
         }
 
-        if (MouseWheelie.CONFIG.scrolling.enable() && !isInventoryTabSelected()) {
-            if (MouseWheelie.CONFIG.scrolling.scrollCreativeMenuItems() == hasAltDown()) return ScrollAction.ABORT;
+        if (MWConfigHandler.getConfig().scrolling.enable() && !isInventoryTabSelected()) {
+            if (MWConfigHandler.getConfig().scrolling.scrollCreativeMenuItems() == hasAltDown()) return ScrollAction.ABORT;
             Slot hoverSlot = this.mouseWheelie_getSlotAt(mouseX, mouseY);
             if (hoverSlot != null) {
                 ContainerScreenHelper.of(this, (slot, data, slotActionType) -> new InteractionManager.CallbackEvent(() -> {

@@ -18,7 +18,7 @@
 package de.siphalor.mousewheelie.client.util;
 
 import com.google.common.collect.Sets;
-import de.siphalor.mousewheelie.MouseWheelie;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.minecraft.component.Component;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentMapImpl;
@@ -146,7 +146,7 @@ public class ItemStackUtils {
     }
 
     public static boolean areItemsOfSameKind(ItemStack stack1, ItemStack stack2) {
-        return areItemsOfSameKind(stack1, stack2, MouseWheelie.CONFIG.general.itemComponentMatchMode());
+        return areItemsOfSameKind(stack1, stack2, MWConfigHandler.getConfig().general.itemComponentMatchMode());
     }
 
     public static boolean areItemsOfSameKind(ItemStack stack1, ItemStack stack2, ComponentTypeMatchMode mode) {

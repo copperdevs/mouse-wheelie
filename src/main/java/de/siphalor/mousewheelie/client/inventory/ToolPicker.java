@@ -17,8 +17,8 @@
 
 package de.siphalor.mousewheelie.client.inventory;
 
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -44,7 +44,7 @@ public class ToolPicker {
     public int findToolFor(BlockState blockState) {
         float bestBreakSpeed = 1.0F;
         int bestSpeedSlot = -1;
-        int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
+        int invSize = (MWConfigHandler.getConfig().toolPicking.pickFromInventory() ? inventory.main.size() : 9);
         for (int i = 1; i <= invSize; i++) {
             int index = (i + lastToolPickSlot) % invSize;
             if (index == inventory.selectedSlot) continue;
@@ -71,7 +71,7 @@ public class ToolPicker {
     }
 
     public int findWeapon() {
-        int invSize = (MouseWheelie.CONFIG.toolPicking.pickFromInventory() ? inventory.main.size() : 9);
+        int invSize = (MWConfigHandler.getConfig().toolPicking.pickFromInventory() ? inventory.main.size() : 9);
         for (int i = 1; i <= invSize; i++) {
             int index = (i + lastToolPickSlot) % invSize;
             if (index == inventory.selectedSlot) continue;

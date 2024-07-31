@@ -18,11 +18,11 @@
 package de.siphalor.mousewheelie.client.keybinding;
 
 import de.siphalor.amecs.api.AmecsKeyBinding;
-import de.siphalor.amecs.api.KeyBindingUtils;
 import de.siphalor.amecs.api.KeyModifiers;
 import de.siphalor.amecs.api.PriorityKeyBinding;
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
+import dev.kingtux.tms.api.scroll.ScrollKey;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 
@@ -30,12 +30,12 @@ public class ScrollKeyBinding extends AmecsKeyBinding implements PriorityKeyBind
     private final boolean scrollDown;
 
     public ScrollKeyBinding(Identifier id, String category, boolean scrollDown) {
-        super(id, InputUtil.Type.MOUSE, scrollDown ? 512 : 513, category, new KeyModifiers());
+        super(id, InputUtil.Type.MOUSE, scrollDown ? ScrollKey.DOWN.getId() : ScrollKey.UP.getId(), category, new KeyModifiers());
         this.scrollDown = scrollDown;
     }
 
     @Override
     public boolean onPressedPriority() {
-        return MWClient.triggerScroll(MWClient.getMouseX(), MWClient.getMouseY(), scrollDown == MouseWheelie.CONFIG.scrolling.invert() ? -1D : 1D);
+        return MWClient.triggerScroll(MWClient.getMouseX(), MWClient.getMouseY(), scrollDown == MWConfigHandler.getConfig().scrolling.invert() ? -1D : 1D);
     }
 }

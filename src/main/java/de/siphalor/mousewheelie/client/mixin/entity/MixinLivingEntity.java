@@ -17,8 +17,8 @@
 
 package de.siphalor.mousewheelie.client.mixin.entity;
 
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.SlotRefiller;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.LivingEntity;
@@ -44,7 +44,7 @@ public abstract class MixinLivingEntity {
     @Inject(method = "consumeItem", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;finishUsing(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/item/ItemStack;"))
     protected void onItemUseFinish(CallbackInfo callbackInfo) {
         //noinspection ConstantConditions
-        if ((Object) this instanceof PlayerEntity && MouseWheelie.CONFIG.refill.enable() && MouseWheelie.CONFIG.refill.eat() && activeItemStack.isEmpty()) {
+        if ((Object) this instanceof PlayerEntity && MWConfigHandler.getConfig().refill.enable() && MWConfigHandler.getConfig().refill.eat() && activeItemStack.isEmpty()) {
             PlayerInventory playerInventory = ((PlayerEntity) (Object) this).getInventory();
             activeItemStack.setCount(1);
             SlotRefiller.scheduleRefillUnchecked(getActiveHand(), playerInventory, activeItemStack.copy());

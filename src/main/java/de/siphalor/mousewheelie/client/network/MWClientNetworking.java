@@ -18,10 +18,8 @@
 package de.siphalor.mousewheelie.client.network;
 
 import de.siphalor.mousewheelie.common.network.MWNetworking;
-import de.siphalor.mousewheelie.common.network.ReorderInventoryPacket;
 import de.siphalor.mousewheelie.network.ReorderInventoryPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
 
 public class MWClientNetworking extends MWNetworking {
 

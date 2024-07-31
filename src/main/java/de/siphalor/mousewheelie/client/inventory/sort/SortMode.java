@@ -17,10 +17,10 @@
 
 package de.siphalor.mousewheelie.client.inventory.sort;
 
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.util.CreativeSearchOrder;
 import de.siphalor.mousewheelie.client.util.ItemStackUtils;
 import de.siphalor.mousewheelie.client.util.StackMatcher;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -123,7 +123,7 @@ public abstract class SortMode {
             @Override
             public int[] sort(int[] sortIds, ItemStack[] stacks, SortContext context) {
                 int[] sortValues = new int[sortIds.length];
-                if (MouseWheelie.CONFIG.sort.optimizeCreativeSearchSort()) {
+                if (MWConfigHandler.getConfig().sort.optimizeCreativeSearchSort()) {
                     Lock lock = CreativeSearchOrder.getReadLock();
                     lock.lock();
                     for (int i = 0; i < stacks.length; i++) {

@@ -28,6 +28,7 @@ import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.util.ScrollAction;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -97,7 +98,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
         Collection<Slot> slots = Collections.emptyList();
         Slot hoveredSlot = getSlotAt(x, y);
 
-        if (MouseWheelie.CONFIG.general.betterFastDragging()) {
+        if (MWConfigHandler.getConfig().general.betterFastDragging()) {
             double dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             if (dist > 16.0) {
                 slots = new ArrayList<>();
@@ -125,7 +126,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 
         ContainerScreenHelper<?> screenHelper = this.screenHelper.get();
         if (button == 0) { // Left mouse button
-            if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
+            if (MWConfigHandler.getConfig().general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
                 for (Slot slot : slots) {
                     screenHelper.dropStackLocked(slot);
                 }
@@ -184,7 +185,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
             }
 
             boolean success = true;
-            if (MouseWheelie.CONFIG.general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
+            if (MWConfigHandler.getConfig().general.enableDropModifier() && MWClient.DROP_MODIFIER.isPressed()) {
                 if (MWClient.ALL_OF_KIND_MODIFIER.isPressed()) {
                     if (MWClient.WHOLE_STACK_MODIFIER.isPressed()) {
                         screenHelper.get().dropAllFrom(hoveredSlot);
@@ -216,7 +217,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
             }
         } else if (button == 1) {
             ItemStack cursorStack = handler.getCursorStack();
-            if (!cursorStack.isEmpty() && MouseWheelie.CONFIG.general.enableBundleDragging() && cursorStack.getItem() instanceof BundleItem item) {
+            if (!cursorStack.isEmpty() && MWConfigHandler.getConfig().general.enableBundleDragging() && cursorStack.getItem() instanceof BundleItem item) {
                 Slot hoveredSlot = getSlotAt(x, y);
                 if (hoveredSlot == null) {
                     bundleDragMode = BundleDragMode.AUTO;
@@ -255,7 +256,7 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
 
     @Override
     public ScrollAction mouseWheelie_onMouseScroll(double mouseX, double mouseY, double scrollAmount) {
-        if (MouseWheelie.CONFIG.scrolling.enable()) {
+        if (MWConfigHandler.getConfig().scrolling.enable()) {
             if (hasAltDown()) return ScrollAction.FAILURE;
             Slot hoveredSlot = getSlotAt(mouseX, mouseY);
             if (hoveredSlot == null) return ScrollAction.PASS;
@@ -288,11 +289,11 @@ public abstract class MixinAbstractContainerScreen extends Screen implements ICo
         InventorySorter sorter = new InventorySorter(screenHelper.get(), (HandledScreen<?>) (Object) this, focusedSlot);
         SortMode sortMode;
         if (hasShiftDown()) {
-            sortMode = MouseWheelie.CONFIG.sort.shiftSort().getSortMode();
+            sortMode = MWConfigHandler.getConfig().sort.shiftSort().getSortMode();
         } else if (hasControlDown()) {
-            sortMode = MouseWheelie.CONFIG.sort.controlSort().getSortMode();
+            sortMode = MWConfigHandler.getConfig().sort.controlSort().getSortMode();
         } else {
-            sortMode = MouseWheelie.CONFIG.sort.primarySort().getSortMode();
+            sortMode = MWConfigHandler.getConfig().sort.primarySort().getSortMode();
         }
         if (sortMode == null) return false;
         sorter.sort(sortMode);

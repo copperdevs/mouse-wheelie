@@ -17,14 +17,12 @@
 
 package de.siphalor.mousewheelie.client.util;
 
-import de.siphalor.mousewheelie.MWConfig;
-import de.siphalor.mousewheelie.MouseWheelie;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class CreativeSearchOrder {
 
     // Called on config change and when the feature set changes (on world join)
     public static void refreshItemSearchPositionLookup() {
-        if (MouseWheelie.CONFIG.sort.optimizeCreativeSearchSort()) {
+        if (MWConfigHandler.getConfig().sort.optimizeCreativeSearchSort()) {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.world == null) {
                 return;

@@ -17,7 +17,7 @@
 
 package de.siphalor.mousewheelie.client.network;
 
-import de.siphalor.mousewheelie.MouseWheelie;
+import de.siphalor.mousewheelie.Logger;
 import de.siphalor.mousewheelie.client.MWClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -127,7 +127,7 @@ public class InteractionManager {
         try {
             triggerSend(TriggerType.TICK);
         } catch (Exception e) {
-            MouseWheelie.logError("Error while ticking InteractionManager " + e);
+            Logger.error("Error while ticking InteractionManager " + e);
         }
     }
 

@@ -17,10 +17,9 @@
 
 package de.siphalor.mousewheelie.client.mixin;
 
-import de.siphalor.mousewheelie.MWConfig;
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.SlotRefiller;
 import de.siphalor.mousewheelie.client.util.inject.ISlot;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -48,7 +47,7 @@ public abstract class MixinContainer {
     @Inject(method = "updateSlotStacks", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/slot/Slot;setStackNoCallbacks(Lnet/minecraft/item/ItemStack;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT)
     public void onSlotUpdate(int i, List<ItemStack> itemStacks, ItemStack cursorStack, CallbackInfo callbackInfo, int index) {
         //noinspection ConstantConditions
-        if ((Object) this instanceof PlayerScreenHandler && MouseWheelie.CONFIG.refill.enable() && MouseWheelie.CONFIG.refill.other()) {
+        if ((Object) this instanceof PlayerScreenHandler && MWConfigHandler.getConfig().refill.enable() && MWConfigHandler.getConfig().refill.other()) {
             PlayerInventory playerInventory = MinecraftClient.getInstance().player.getInventory();
             Slot targetSlot = getSlot(index);
             if (targetSlot.inventory != playerInventory) return;

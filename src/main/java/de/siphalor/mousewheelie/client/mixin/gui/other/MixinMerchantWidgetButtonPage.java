@@ -17,12 +17,11 @@
 
 package de.siphalor.mousewheelie.client.mixin.gui.other;
 
-import de.siphalor.mousewheelie.MWConfig;
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.client.network.InteractionManager;
 import de.siphalor.mousewheelie.client.util.inject.IMerchantScreen;
 import de.siphalor.mousewheelie.client.util.inject.ISpecialClickableButtonWidget;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +41,7 @@ public class MixinMerchantWidgetButtonPage implements ISpecialClickableButtonWid
 
     @Override
     public boolean mouseClicked(int mouseButton) {
-        if (mouseButton != 1 || !MouseWheelie.CONFIG.general.enableQuickCraft()) return false;
+        if (mouseButton != 1 || !MWConfigHandler.getConfig().general.enableQuickCraft()) return false;
         MinecraftClient minecraft = MinecraftClient.getInstance();
         Screen screen = minecraft.currentScreen;
         if (screen instanceof IMerchantScreen) {

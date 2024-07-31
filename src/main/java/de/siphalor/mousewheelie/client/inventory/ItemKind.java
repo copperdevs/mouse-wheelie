@@ -17,8 +17,8 @@
 
 package de.siphalor.mousewheelie.client.inventory;
 
-import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.util.ItemStackUtils;
+import de.siphalor.mousewheelie.config.MWConfigHandler;
 import net.minecraft.item.ItemStack;
 
 public class ItemKind {
@@ -37,11 +37,11 @@ public class ItemKind {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemKind that = (ItemKind) o;
-        return ItemStackUtils.areItemsOfSameKind(stack, that.stack, MouseWheelie.CONFIG.general.itemComponentMatchMode());
+        return ItemStackUtils.areItemsOfSameKind(stack, that.stack, MWConfigHandler.getConfig().general.itemComponentMatchMode());
     }
 
     @Override
     public int hashCode() {
-        return ItemStackUtils.hashByKind(stack, MouseWheelie.CONFIG.general.itemComponentMatchMode());
+        return ItemStackUtils.hashByKind(stack, MWConfigHandler.getConfig().general.itemComponentMatchMode());
     }
 }

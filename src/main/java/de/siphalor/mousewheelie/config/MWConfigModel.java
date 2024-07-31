@@ -1,5 +1,6 @@
-package de.siphalor.mousewheelie;
+package de.siphalor.mousewheelie.config;
 
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.inventory.sort.SortMode;
 import de.siphalor.mousewheelie.client.util.ItemStackUtils;
 import io.wispforest.owo.config.annotation.*;
@@ -84,6 +85,10 @@ public class MWConfigModel {
         public boolean drop = true;
         public boolean use = true;
         public boolean other = true;
+
+        @RangeConstraint(min = 0, max = 10000)
+        @Hook
+        public int maxRefillsMillis = 1000;
 
         @Nest
         public Rules rules = new Rules();
