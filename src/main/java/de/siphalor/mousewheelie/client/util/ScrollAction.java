@@ -17,13 +17,16 @@
 
 package de.siphalor.mousewheelie.client.util;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public enum ScrollAction {
     PASS(false, false), SUCCESS(true, true), FAILURE(false, true), ABORT(true, false);
+
     final boolean cancelCustomActions;
     final boolean cancelAllActions;
+
+    ScrollAction(boolean b, boolean b1) {
+        cancelCustomActions = b;
+        cancelAllActions = b1;
+    }
 
     public boolean cancelsAllActions() {
         return cancelAllActions;

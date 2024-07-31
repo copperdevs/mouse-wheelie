@@ -38,6 +38,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import de.siphalor.mousewheelie.MWConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MouseWheelie implements ModInitializer {
     public static final String MOD_ID = "mousewheelie";
@@ -48,6 +50,8 @@ public class MouseWheelie implements ModInitializer {
     public static Identifier id(String id) {
         return Identifier.of(MOD_ID, id);
     }
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
     public void onInitialize() {
@@ -112,5 +116,21 @@ public class MouseWheelie implements ModInitializer {
         }
 
         return level;
+    }
+
+    public static void logInfo(String message) {
+        LOGGER.info(message);
+    }
+
+    public static void logWarn(String message) {
+        LOGGER.warn(message);
+    }
+
+    public static void logWarn(String message, Object... arg) {
+        LOGGER.warn(message, arg);
+    }
+
+    public static void logError(String message) {
+        LOGGER.error(message);
     }
 }

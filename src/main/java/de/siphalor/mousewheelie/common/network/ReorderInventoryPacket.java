@@ -17,17 +17,19 @@
 
 package de.siphalor.mousewheelie.common.network;
 
-import lombok.CustomLog;
-import lombok.Value;
+import de.siphalor.mousewheelie.MouseWheelie;
 import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Value
-@CustomLog
 public class ReorderInventoryPacket {
     int syncId;
     int[] slotMappings;
+
+    public ReorderInventoryPacket(int syncId, int[] reorderedIndices) {
+        this.syncId = syncId;
+        slotMappings = reorderedIndices;
+    }
 
     public void write(@NotNull PacketByteBuf buf) {
         buf.writeVarInt(syncId);
@@ -39,7 +41,7 @@ public class ReorderInventoryPacket {
         int[] reorderedIndices = buf.readIntArray();
 
         if (reorderedIndices.length % 2 != 0) {
-            log.warn("Received reorder inventory packet with invalid data!");
+            MouseWheelie.logWarn("Received reorder inventory packet with invalid data!");
             return null;
         }
 

@@ -1,39 +1,39 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.6.1'
     id 'org.jetbrains.kotlin.jvm' version '2.0.0'
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
 }
 
-
-version = project.mod_version + "+mc" + project.minecraft_version
+version = project.mod_version
 group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 repositories {
     mavenLocal()
+    mavenCentral()
+
     maven {
         name "Fabric"
         url "https://maven.fabricmc.net/"
     }
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/releases" }
+
     maven { url "https://jitpack.io" }
     maven { url 'https://maven.wispforest.io' }
-    mavenCentral()
+    maven { url "https://maven.terraformersmc.com/releases" }
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
+    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    compileOnly(annotationProcessor("org.projectlombok:lombok:$lombok_version"))
-    testCompileOnly(testAnnotationProcessor("org.projectlombok:lombok:$lombok_version"))
-
-
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
@@ -43,17 +43,8 @@ dependencies {
 
     implementation project(':too-many-shortcuts')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-}
 
-// Workaround for https://github.com/gradle/gradle/issues/10195
-configurations.include.transitive = true
-configurations.include.dependencies.each {
-    if (!it.name.contains("bom")) {
-        it.transitive = false
-    }
 }
-
-//sourceSets.main.java.exclude("**/ModMenu*")
 
 license {
     header = project.file('LICENSE_HEADER')
@@ -62,28 +53,18 @@ license {
 }
 
 processResources {
-    inputs.property "version", version
+    inputs.property "version", project.version
 
-    afterEvaluate {
-        from(sourceSets.main.resources.srcDirs) {
-            include "fabric.mod.json"
-            expand "version": version
-            duplicatesStrategy DuplicatesStrategy.INCLUDE
-        }
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
     it.options.release = 21
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
 tasks.register('sourcesJar', Jar) {
     dependsOn classes
     archiveClassifier.set("sources")
@@ -91,26 +72,35 @@ tasks.register('sourcesJar', Jar) {
 }
 
 java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
     withSourcesJar()
 
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
-    from "LICENSE"
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifactId = "${project.archives_base_name}-${project.minecraft_major_version}"
-
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
-            java.withSourcesJar()
         }
     }
-}
 
-kotlin {
-    jvmToolchain(21)
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
 }

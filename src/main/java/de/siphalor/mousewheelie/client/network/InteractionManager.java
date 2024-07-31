@@ -17,8 +17,8 @@
 
 package de.siphalor.mousewheelie.client.network;
 
+import de.siphalor.mousewheelie.MouseWheelie;
 import de.siphalor.mousewheelie.client.MWClient;
-import lombok.CustomLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-@CustomLog
 public class InteractionManager {
     private static final Queue<InteractionEvent> interactionEventQueue = new ArrayDeque<>();
     private static final ScheduledThreadPoolExecutor scheduledExecutor = new ScheduledThreadPoolExecutor(1);
@@ -128,7 +127,7 @@ public class InteractionManager {
         try {
             triggerSend(TriggerType.TICK);
         } catch (Exception e) {
-            log.error("Error while ticking InteractionManager", e);
+            MouseWheelie.logError("Error while ticking InteractionManager " + e);
         }
     }
 

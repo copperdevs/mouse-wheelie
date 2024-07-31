@@ -3,6 +3,11 @@
 .gradle/
 build/
 out/
+classes/
+
+# eclipse
+
+*.launch
 
 # idea
 
@@ -19,6 +24,17 @@ bin/
 .classpath
 .project
 
+# macos
+
+*.DS_Store
+
 # fabric
 
 run/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
