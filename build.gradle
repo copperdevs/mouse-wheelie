@@ -110,6 +110,7 @@ publishing {
         }
     }
 }
+
 kotlin {
     jvmToolchain(21)
 }

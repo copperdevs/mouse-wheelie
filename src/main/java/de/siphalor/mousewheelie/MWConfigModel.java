@@ -6,6 +6,7 @@ import io.wispforest.owo.config.annotation.*;
 
 @Modmenu(modId = MouseWheelie.MOD_ID)
 @Config(name = "mouse-wheelie-config", wrapperName = "MWConfig")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class MWConfigModel {
     @Nest
     public General general = new General();
