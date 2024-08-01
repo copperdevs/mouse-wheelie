@@ -36,14 +36,17 @@ public class SortKeyBinding extends TMSKeyBinding implements PriorityKeyBinding 
     public void onPressed() {
         Screen currentScreen = MinecraftClient.getInstance().currentScreen;
 
-        Logger.info("sort key pressed current screen {}", currentScreen);
+        Logger.info("SortKeyBinding onPressed | current screen {}", currentScreen);
+
+        if (currentScreen instanceof IContainerScreen)
+            ((IContainerScreen) currentScreen).mouseWheelie_triggerSort();
     }
 
     @Override
     public boolean onPressedPriority() {
         Screen currentScreen = MinecraftClient.getInstance().currentScreen;
 
-        Logger.info("sort key pressed priority current screen {}", currentScreen);
+        Logger.info("SortKeyBinding onPressedPriority | current screen {}", currentScreen);
 
         if (currentScreen instanceof IContainerScreen)
             return ((IContainerScreen) currentScreen).mouseWheelie_triggerSort();
@@ -52,9 +55,6 @@ public class SortKeyBinding extends TMSKeyBinding implements PriorityKeyBinding 
 
     @Override
     public boolean onReleasedPriority() {
-        Screen currentScreen = MinecraftClient.getInstance().currentScreen;
-
-        Logger.info("sort key released priority current screen {}", currentScreen);
         return false;
     }
 }
