@@ -2,8 +2,8 @@ plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
+    id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "${kotlin_version}"
 }
 
 version = project.mod_version
@@ -18,19 +18,11 @@ repositories {
     mavenCentral()
     mavenLocal()
 
-    maven {
-        name "Fabric"
-        url "https://maven.fabricmc.net/"
-    }
-
+    maven { url "https://maven.fabricmc.net/" }
     maven { url "https://jitpack.io" }
-    maven { url 'https://maven.wispforest.io' }
+    maven { url "https://maven.wispforest.io" }
     maven { url "https://maven.terraformersmc.com/releases" }
-
-    maven {
-        name = "KingTux Fabric"
-        url = uri("https://repo.kingtux.dev/repositories/maven/fabric-mods/")
-    }
+    maven { url "https://repo.kingtux.dev/repositories/maven/fabric-mods/" }
 }
 
 dependencies {
@@ -48,8 +40,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    modImplementation("dev.kingtux:too-many-shortcuts:0.0.4+mc.1.21")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0")
+    modImplementation("dev.kingtux:too-many-shortcuts:${tms_version}+mc.${project.minecraft_version}")
+    modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}+kotlin.${kotlin_version}")
 }
 
 license {

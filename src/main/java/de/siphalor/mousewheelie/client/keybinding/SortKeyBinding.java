@@ -17,9 +17,9 @@
 
 package de.siphalor.mousewheelie.client.keybinding;
 
+import de.siphalor.amecs.api.PriorityKeyBinding;
 import de.siphalor.mousewheelie.Logger;
 import de.siphalor.mousewheelie.client.util.inject.IContainerScreen;
-import dev.kingtux.tms.api.PriorityKeyBinding;
 import dev.kingtux.tms.api.TMSKeyBinding;
 import dev.kingtux.tms.api.modifiers.BindingModifiers;
 import net.minecraft.client.MinecraftClient;
