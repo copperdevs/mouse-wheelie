@@ -53,12 +53,12 @@ public class MWClient implements ClientModInitializer {
     public static final KeyBinding SORT_KEY_BINDING = new SortKeyBinding(MouseWheelie.id("sort_inventory"), InputUtil.Type.MOUSE, 2, KEY_BINDING_CATEGORY, new BindingModifiers());
     public static final KeyBinding SCROLL_UP_KEY_BINDING = new ScrollKeyBinding(MouseWheelie.id("scroll_up"), KEY_BINDING_CATEGORY, false);
     public static final KeyBinding SCROLL_DOWN_KEY_BINDING = new ScrollKeyBinding(MouseWheelie.id("scroll_down"), KEY_BINDING_CATEGORY, true);
-    public static final KeyBinding PICK_TOOL_KEY_BINDING = new PickToolKeyBinding(MouseWheelie.id("pick_tool"), InputUtil.Type.KEYSYM, -1, KEY_BINDING_CATEGORY, new KeyModifiers());
-    public static final ActionModifierKeybinding WHOLE_STACK_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("whole_stack_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_SHIFT, KEY_BINDING_CATEGORY, new KeyModifiers());
-    public static final ActionModifierKeybinding ALL_OF_KIND_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("all_of_kind_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_CONTROL, KEY_BINDING_CATEGORY, new KeyModifiers());
-    public static final ActionModifierKeybinding DROP_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("drop_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, KEY_BINDING_CATEGORY, new KeyModifiers());
-    public static final ActionModifierKeybinding DEPOSIT_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("deposit_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, KEY_BINDING_CATEGORY, new KeyModifiers());
-    public static final ActionModifierKeybinding RESTOCK_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("restock_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, KEY_BINDING_CATEGORY, new KeyModifiers());
+    public static final KeyBinding PICK_TOOL_KEY_BINDING = new PickToolKeyBinding(MouseWheelie.id("pick_tool"), InputUtil.Type.KEYSYM, -1, KEY_BINDING_CATEGORY, new BindingModifiers());
+    public static final ActionModifierKeybinding WHOLE_STACK_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("whole_stack_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_SHIFT, KEY_BINDING_CATEGORY, new BindingModifiers());
+    public static final ActionModifierKeybinding ALL_OF_KIND_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("all_of_kind_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_CONTROL, KEY_BINDING_CATEGORY, new BindingModifiers());
+    public static final ActionModifierKeybinding DROP_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("drop_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, KEY_BINDING_CATEGORY, new BindingModifiers());
+    public static final ActionModifierKeybinding DEPOSIT_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("deposit_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, KEY_BINDING_CATEGORY, new BindingModifiers());
+    public static final ActionModifierKeybinding RESTOCK_MODIFIER = new ActionModifierKeybinding(MouseWheelie.id("restock_modifier"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, KEY_BINDING_CATEGORY, new BindingModifiers());
 
     public static int lastUpdatedSlot = -1;
 

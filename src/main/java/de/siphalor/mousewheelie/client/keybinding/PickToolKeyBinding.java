@@ -21,6 +21,8 @@ import de.siphalor.amecs.api.AmecsKeyBinding;
 import de.siphalor.amecs.api.KeyModifiers;
 import de.siphalor.amecs.api.PriorityKeyBinding;
 import de.siphalor.mousewheelie.client.inventory.ToolPicker;
+import dev.kingtux.tms.api.TMSKeyBinding;
+import dev.kingtux.tms.api.modifiers.BindingModifiers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,8 +30,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 
-public class PickToolKeyBinding extends AmecsKeyBinding implements PriorityKeyBinding {
-    public PickToolKeyBinding(Identifier id, InputUtil.Type type, int code, String category, KeyModifiers defaultModifiers) {
+public class PickToolKeyBinding extends TMSKeyBinding implements PriorityKeyBinding {
+    public PickToolKeyBinding(Identifier id, InputUtil.Type type, int code, String category, BindingModifiers defaultModifiers) {
         super(id, type, code, category, defaultModifiers);
     }
 

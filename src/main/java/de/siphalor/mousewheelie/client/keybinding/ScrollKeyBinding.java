@@ -22,15 +22,17 @@ import de.siphalor.amecs.api.KeyModifiers;
 import de.siphalor.amecs.api.PriorityKeyBinding;
 import de.siphalor.mousewheelie.client.MWClient;
 import de.siphalor.mousewheelie.config.MWConfigHandler;
+import dev.kingtux.tms.api.TMSKeyBinding;
+import dev.kingtux.tms.api.modifiers.BindingModifiers;
 import dev.kingtux.tms.api.scroll.ScrollKey;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 
-public class ScrollKeyBinding extends AmecsKeyBinding implements PriorityKeyBinding {
+public class ScrollKeyBinding extends TMSKeyBinding implements PriorityKeyBinding {
     private final boolean scrollDown;
 
     public ScrollKeyBinding(Identifier id, String category, boolean scrollDown) {
-        super(id, InputUtil.Type.MOUSE, scrollDown ? ScrollKey.DOWN.getId() : ScrollKey.UP.getId(), category, new KeyModifiers());
+        super(id, InputUtil.Type.MOUSE, scrollDown ? ScrollKey.DOWN.getId() : ScrollKey.UP.getId(), category, new BindingModifiers());
         this.scrollDown = scrollDown;
     }
 
