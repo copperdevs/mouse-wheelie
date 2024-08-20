@@ -40,7 +40,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    modImplementation("dev.kingtux:too-many-shortcuts:${tms_version}+mc.${project.minecraft_version}")
+    modImplementation("dev.kingtux:too-many-shortcuts:${tms_version}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}+kotlin.${kotlin_version}")
 }
 
