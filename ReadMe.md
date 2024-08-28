@@ -1,23 +1,13 @@
 
 > [!IMPORTANT]  
-> This port is still a work in progress and not fully functioning yet. You can check what is left in the port [here](#to-do-things-to-fix).
+> This port is still a work in progress and not fully functioning yet. <br>
+> Due to lack of time I have not had the ability to sit down and work on this port for yet. <br>
+> Until then you can use alternatives that provide similar results such as
+> [ClientSort](https://modrinth.com/mod/clientsort) and [MouseTweaks](https://modrinth.com/mod/mouse-tweaks) or [Tweakeroo](https://github.com/sakura-ryoko/tweakeroo)
 
 # Mouse Wheelie - 1.21 Fork
 
 > "Small" Minecraft Fabric mod featuring inventory utilities like scrolling, sorting and auto refilling of items
-
-## To Do (Things to fix)
-
-- [ ] Translations
-- [ ] Inventory sorting
-    - Currently works when there aren't multiple stacks of the same item
-    - Currently only works on first inventory open
-- [ ] Inventory scrolling
-- [X] Hold alt-leftclick to drop items quickly.
-- [ ] Creative inventory tabs scrolling
-- [X] Inventory restocking
-- [ ] Right-click trades or recipes to directly apply the crafting. When holding shift it will craft/trade a full stack
-    - Currently only works on first inventory open
 
 ## Fork Changes
 - Switched config api from [tweed-api](https://github.com/Siphalor/tweed-api) to [owo-lib](https://github.com/wisp-forest/owo-lib)
